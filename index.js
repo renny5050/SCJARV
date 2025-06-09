@@ -14,9 +14,14 @@ app.get('/', (req, res) => {
     res.render('index', { message: 'Hello, Express 4.17!' });
 });
 
+//RUTAS PARA EL SIDEBAR
 app.get('/inscripcion', (req, res) => {
     res.render('inscription');
 });
+app.get('/donaciones', (req, res) => {
+    res.render('donaciones');
+});
+
 
 app.get('/test', User.testUsers);
 
