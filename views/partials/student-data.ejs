@@ -1,89 +1,95 @@
 <div class="section-title">1. Datos del Estudiante</div>
+
+<div class="row mb-3">
+  <div class="col-md-3">
+    <label class="form-label">Primer Nombre</label>
+    <input type="text" class="form-control" name="primer_nombr" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Segundo Nombre</label>
+    <input type="text" class="form-control" name="segundo_nomb">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Primer Apellido</label>
+    <input type="text" class="form-control" name="primer_apell" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Segundo Apellido</label>
+    <input type="text" class="form-control" name="segundo_apellido">
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-md-3">
+    <label class="form-label">Fecha de Nacimiento</label>
+    <input type="date" class="form-control" name="fecha_nacimiento" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Edad</label>
+    <div class="input-group">
+      <input type="number" class="form-control" name="edad_anios" placeholder="Años">
+      <input type="number" class="form-control" name="edad_meses" placeholder="Meses">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Sexo</label>
+    <select class="form-select" name="sexo" required>
+      <option value="">Seleccione</option>
+      <option value="M">Masculino</option>
+      <option value="F">Femenino</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Nacionalidad</label>
+    <select class="form-select" name="nacionalidad" required>
+      <option value="">Seleccione</option>
+      <option value="V">Venezolano</option>
+      <option value="E">Extranjero</option>
+    </select>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-md-3">
+    <label class="form-label">Cédula Escolar</label>
+    <input type="text" class="form-control" name="cedula_escolar">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Peso</label>
+    <div class="input-group">
+      <input type="number" class="form-control" name="peso_kg" placeholder="Kg">
+      <input type="number" class="form-control" name="peso_g" placeholder="g">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Talla</label>
+    <div class="input-group">
+      <input type="number" class="form-control" name="talla_m" placeholder="m">
+      <input type="number" class="form-control" name="talla_cm" placeholder="cm">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Fecha de Inscripción</label>
+    <input type="date" class="form-control" name="fecha_inscripcion">
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-md-3">
+    <label class="form-label">Estado de Nacimiento</label>
+    <input type="text" class="form-control" name="estado_nacimi" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Municipio de Nacimiento</label>
+    <input type="text" class="form-control" name="municipio_nacimi" required>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Viene Promovido de:</label>
+    <input type="text" class="form-control" name="viene_promovido_de">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Institución</label>
+    <input type="text" class="form-control" name="institucion">
+  </div>
+</div>
             
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Primer Nombre</label>
-                    <input type="text" class="form-control" name="primer_nombr" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Segundo Nombre</label>
-                    <input type="text" class="form-control" name="segundo_nomb">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Primer Apellido</label>
-                    <input type="text" class="form-control" name="primer_apell" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Segundo Apellido</label>
-                    <input type="text" class="form-control" name="segundo_apellido">
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" name="fecha_nacimiento" required>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Sexo</label>
-                    <select class="form-select" name="sexo" required>
-                        <option value="">Seleccione</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Nacionalidad</label>
-                    <select class="form-select" name="nacionalidad" required>
-                        <option value="">Seleccione</option>
-                        <option value="V">Venezolana</option>
-                        <option value="E">Extranjera</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Tipo de Sangre</label>
-                    <select class="form-select" name="grupo_sangui" required>
-                        <option value="">Seleccione</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Cédula Escolar</label>
-                    <input type="text" class="form-control" name="cedu_escolar">
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Lugar de Nacimiento</label>
-                    <input type="text" class="form-control" name="lugar_nacimi" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Instituto Anterior</label>
-                    <input type="text" class="form-control" name="instituto">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Mano Dominante</label>
-                    <select class="form-select" name="mano_dominante" required>
-                        <option value="">Seleccione</option>
-                        <option value="Derecha">Derecha</option>
-                        <option value="Izquierda">Izquierda</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- Foto del estudiante -->
-            <div class="photo-section">
-                <div class="mb-3">
-                    <label class="form-label">Foto del Estudiante</label>
-                    <input type="file" class="form-control" name="student_photo" accept="image/*">
-                    <div class="form-text">Formatos: JPG, PNG (Máximo 2MB)</div>
-                </div>
-            </div>
