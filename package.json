@@ -1,0 +1,20 @@
+{
+  "name": "sc-jarv",
+  "version": "1.0.0",
+  "description": "Sistema J.A. Román Valencillos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "UNEFA",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.17.3",
+    "pdfkit": "^0.12.3",
+    "sqlite": "^3.0.6",
+    "sqlite3": "^4.2.0"
+  }
+}

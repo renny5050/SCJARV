@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+</head>
+<body>
+  <h1>Formulario de Nombre</h1>
+  <form action="/test" method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <h2>Lista de Nombres</h2>
+  <!-- ✅ Usa "users" y "name" -->
+  <% if (typeof users !== 'undefined' && Array.isArray(users) && users.length > 0) { %>
+    <ul>
+      <% users.forEach((item) => { %>
+        <li>ID: <%= item.id %> - Nombre: <%= item.name %></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No hay usuarios registrados aún.</p>
+  <% } %>
+
+  <!-- views/testpost.ejs -->
+    <a href="/users/pdf" download>
+    <button type="button">Descargar PDF</button>
+    </a>
+
+    <a href="/users/pdftest" download>
+    <button type="button">TEST PDF</button>
+    </a>
+</body>
+</html>
