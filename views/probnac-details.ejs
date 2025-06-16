@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"  rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">   
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .detail-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .detail-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        .detail-row {
+            display: flex;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .detail-label {
+            width: 180px;
+            font-weight: 500;
+            color: #7f8c8d;
+        }
+        .detail-value {
+            flex: 1;
+            color: #2c3e50;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            padding: 8px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1><i class="fas fa-baby me-2"></i>Detalles del Problema de Nacimiento</h1>
+        </div>
+        
+        <div class="detail-card">
+            <h3 class="detail-title">
+                <i class="fas fa-medkit me-2"></i>
+                Información Clínica
+            </h3>
+            
+            <div class="detail-row">
+                <div class="detail-label">Código:</div>
+                <div class="detail-value"><%= probnac.cod_probNace %></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Edad al caminar:</div>
+                <div class="detail-value"><%= probnac.edad_caminar %> meses</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Edad al hablar:</div>
+                <div class="detail-value"><%= probnac.edad_nhablar %> meses</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Mano dominante:</div>
+                <div class="detail-value"><%= probnac.mano_dominan %></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Códigos de enfermedades:</div>
+                <div class="detail-value"><%= probnac.cod_enfePade %></div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="/estudiante/<%= student.codigo_estud %>" class="btn back-btn">
+                    <i class="fas fa-arrow-left me-2"></i> Volver a lista
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>   
+</body>
+</html>

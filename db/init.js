@@ -7,222 +7,192 @@ const db = new sqlite3.Database('./database.db', (err) => {
 });
 
 // Crear tablas
+const statements = [
+`CREATE TABLE IF NOT EXISTS "Tb_nupersona" (
+  "codigo_perso" INTEGER PRIMARY KEY,
+  "primer_nombr" VARCHAR(20),
+  "segundo_nomb" VARCHAR(20),
+  "primer_apell" VARCHAR(20),
+  "segund_apell" VARCHAR(20),
+  "cedula_perso" VARCHAR(10),
+  "cedula" VARCHAR(10),
+  "fech_nacimie" DATE,
+  "nacionalidad" VARCHAR(1),
+  "correo_perso" VARCHAR(30),
+  "direcc_perso" TEXT,
+  "status_perso" BOOLEAN,
+  "prin_telefono" VARCHAR(12),
+  "sec_telefono" VARCHAR(12),
+  "cas_telefono" VARCHAR(12)
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tabla_nCargo" (
+  "codigo_cargo" INTEGER PRIMARY KEY,
+  "nombre_cargo" VARCHAR(10)
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_nuSeccion" (
+  "codigo_secci" INTEGER PRIMARY KEY,
+  "nombre_secci" VARCHAR(10)
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_am_so_fam" (
+  "cod_amSocFam" INTEGER PRIMARY KEY,
+  "pers_amSoFam" INTEGER,
+  "numero_ninos" INTEGER,
+  "nume_adultos" INTEGER,
+  "tip_caracter" VARCHAR(15),
+  "tip_tenencia" VARCHAR(15)
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_ante_pren" (
+  "cod_antePren" INTEGER PRIMARY KEY,
+  "enfe_madreEm" VARCHAR(35),
+  "cod_codiPart" VARCHAR(50),
+  "edad_maParto" INTEGER,
+  "peso_ninoNac" INTEGER,
+  "tall_ninoNac" INTEGER,
+  "medi_contPre" VARCHAR(30)
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_probl_nac" (
+  "cod_probNace" INTEGER PRIMARY KEY,
+  "edad_caminar" INTEGER,
+  "edad_nhablar" INTEGER,
+  "mano_dominan" VARCHAR(10),
+  "cod_enfePade" TEXT
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_represent" (
+  "codigo_repre" INTEGER PRIMARY KEY,
+  "parentesco_r" VARCHAR(20),
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_madreNino" (
+  "codigo_madre" INTEGER PRIMARY KEY,
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_padreNino" (
+  "codigo_padre" INTEGER PRIMARY KEY,
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_cont_emer" (
+  "cod_contEmer" INTEGER PRIMARY KEY,
+  "parentesco_e" VARCHAR(20),
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_nPersonal" (
+  "cod_personal" INTEGER PRIMARY KEY,
+  "fecha_entrad" DATE,
+  "fecha_salida" DATE,
+  "codigo_cargo" INTEGER,
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("codigo_cargo") REFERENCES "Tabla_nCargo" ("codigo_cargo"),
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_anoSeccio" (
+  "cod_anoSecci" INTEGER PRIMARY KEY,
+  "ano_Seccione" CHAR(1),
+  "codigo_secci" INTEGER,
+  FOREIGN KEY ("codigo_secci") REFERENCES "Tb_nuSeccion" ("codigo_secci")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_estudiant" (
+  "codigo_estud" INTEGER PRIMARY KEY,
+  "primer_nombr" VARCHAR(20),
+  "segundo_nomb" VARCHAR(20),
+  "primer_apell" VARCHAR(20),
+  "segundo_apellido" VARCHAR(20),
+  "fecha_nacimiento" DATE,
+  "sexo" CHAR(1),
+  "nacionalidad" CHAR(1),
+  "tip_sangrees" BOOLEAN,
+  "grupo_sangui" CHAR(2),
+  "estad_nacimi" VARCHAR(20),
+  "munic_nacimi" TEXT,
+  "cedu_escolar" VARCHAR(14),
+  "status_estud" BOOLEAN,
+  "codigo_repre" INTEGER,
+  "codigo_padre" INTEGER,
+  "codigo_madre" INTEGER,
+  "cod_contEmer" INTEGER,
+  "cod_amSocFam" INTEGER,
+  "cod_antePren" INTEGER,
+  "cod_probNace" INTEGER,
+  FOREIGN KEY ("cod_amSocFam") REFERENCES "Tb_am_so_fam" ("cod_amSocFam"),
+  FOREIGN KEY ("codigo_repre") REFERENCES "Tb_represent" ("codigo_repre"),
+  FOREIGN KEY ("codigo_madre") REFERENCES "Tb_madreNino" ("codigo_madre"),
+  FOREIGN KEY ("codigo_padre") REFERENCES "Tb_padreNino" ("codigo_padre"),
+  FOREIGN KEY ("cod_contEmer") REFERENCES "Tb_cont_emer" ("cod_contEmer"),
+  FOREIGN KEY ("cod_probNace") REFERENCES "Tb_probl_nac" ("cod_probNace"),
+  FOREIGN KEY ("cod_antePren") REFERENCES "Tb_ante_pren" ("cod_antePren")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_doceSecci" (
+  "cod_doceSecc" INTEGER PRIMARY KEY,
+  "cod_anoSecci" INTEGER,
+  "codigo_perso" INTEGER,
+  FOREIGN KEY ("cod_anoSecci") REFERENCES "Tb_anoSeccio" ("cod_anoSecci"),
+  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_inscripci" (
+  "cod_inscripc" INTEGER PRIMARY KEY,
+  "cod_anoSecci" INTEGER,
+  "codigo_estud" INTEGER,
+  "entra_tardia" DATE,
+  "salida_tempr" DATE,
+  FOREIGN KEY ("cod_anoSecci") REFERENCES "Tb_anoSeccio" ("cod_anoSecci"),
+  FOREIGN KEY ("codigo_estud") REFERENCES "Tb_estudiant" ("codigo_estud")
+);`,
+
+`CREATE TABLE IF NOT EXISTS "Tb_colaborac" (
+  "cod_colabora" INTEGER PRIMARY KEY,
+  "cod_inscripc" INTEGER,
+  "fecha_dPagos" DATE,
+  "monto_dPagoS" VARCHAR(8),
+  FOREIGN KEY ("cod_inscripc") REFERENCES "Tb_inscripci" ("cod_inscripc")
+);`
+];
+
+// Función para ejecutar las sentencias SQL en serie
+function executeStatements(index = 0) {
+  if (index >= statements.length) {
+    // Insertar datos de prueba
+    db.all(`SELECT * FROM Tb_nupersona`, (err, rows) => {
+      if (err) {
+      console.error("Error en select:", err.message);
+      } else {
+      console.log("Contenido de Tb_nupersona:", rows);
+      }
+      // Cerrar conexión después de completar todo
+      db.close((err) => {
+      if (err) console.error(err.message);
+      console.log("Base de datos creada y cerrada correctamente");
+      });
+    });
+    return;
+  }
+
+  db.run(statements[index], (err) => {
+    if (err) {
+      console.error("Error en statement:", err.message);
+      console.error("SQL:", statements[index]);
+    }
+    executeStatements(index + 1);
+  });
+}
+
+// Iniciar la ejecución de las sentencias
 db.serialize(() => {
-  db.run(`
-
-    CREATE TABLE "Tb_estudiant" (
-  "codigo_estud" varchar(3) PRIMARY KEY,
-  "primer_nombr" varchar(20),
-  "segundo_nomb" varchar(20),
-  "primer_apell" varchar(20),
-  "segundo_apellido" varchar(20),
-  "fecha_nacimiento" date(10),
-  "sexo" char(1),
-  "nacionalidad" char(1),
-  "tip_sangrees" boolean,
-  "grupo_sangui" char(2),
-  "lugar_nacimi" text,
-  "cedu_escolar" varchar(14),
-  "status_estud" boolean,
-  "codigo_repre" varchar(3),
-  "codigo_padre" varchar(3),
-  "codigo_madre" varchar(3),
-  "cod_contEmer" varchar(3),
-  "cod_amSocFam" varchar(3),
-  "cod_antePren" varchar(3),
-  "cod_probNace" varchar(3)
-);
-
-CREATE TABLE "Tb_represent" (
-  "codigo_repre" varchar(3),
-  "parentesco_r" varchar(20),
-  "telefon_casa" varchar(12),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_madreNino" (
-  "codigo_madre" varchar(3),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_padreNino" (
-  "codigo_padre" varchar(3),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_cont_emer" (
-  "cod_contEmer" varchar(3),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_nupersona" (
-  "codigo_perso" varchar(3),
-  "primer_nombr" varchar(20),
-  "segundo_nomb" varchar(20),
-  "primer_apell" varchar(20),
-  "segund_apell" varchar(20),
-  "cedula_perso" char(1),
-  "tip_sangrees" boolean,
-  "cedula" varchar(10),
-  "grupo_sangui" char(2),
-  "fech_nacimie" date,
-  "nacionalidad" varchar(1),
-  "correo_perso" varchar(30),
-  "direcc_perso" text,
-  "status_perso" boolean
-);
-
-CREATE TABLE "Tb_telefonop" (
-  "cod_telefono" varchar(3),
-  "prin_telefono" varchar(12),
-  "sec_telefono" varchar(12),
-  "cas_telefono" varchar(12),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_am_so_fam" (
-  "cod_amSocFam" varchar(3),
-  "pers_amSoFam" int,
-  "numero_ninos" int,
-  "nume_adultos" int,
-  "cod_caracter" varchar(3),
-  "cod_tenencia" varchar(3)
-);
-
-CREATE TABLE "Tb_caracteri" (
-  "cod_caracter" varchar(3),
-  "nombre_carac" varchar(30)
-);
-
-CREATE TABLE "Tb_tenencia" (
-  "cod_tenencia" varchar(3),
-  "nombre_tenen" varchar(15)
-);
-
-CREATE TABLE "Tb_ante_pren" (
-  "cod_antePren" varchar(3),
-  "enfe_madreEm" varchar(35),
-  "cod_codiPart" varchar(1),
-  "edad_maParto" char(2),
-  "peso_ninoNac" char(3),
-  "tall_ninoNac" char(4),
-  "medi_contPre" char(30)
-);
-
-CREATE TABLE "Tb_codicPart" (
-  "cod_codiPart" varchar(1),
-  "nom_condPart" varchar(15)
-);
-
-CREATE TABLE "Tb_probl_nac" (
-  "cod_probNace" varchar(3),
-  "edad_caminar" varchar(1),
-  "edad_nhablar" varchar(1),
-  "mano_dominan" varchar(10),
-  "cod_enfePade" varchar(3)
-);
-
-CREATE TABLE "Tb_enferPade" (
-  "cod_enfePade" varchar(3),
-  "nom_enfePade" varchar(30)
-);
-
-CREATE TABLE "Tb_nPersonal" (
-  "cod_personal" varchar(3),
-  "fecha_entrad" date,
-  "fecha_salida" date,
-  "codigo_cargo" varchar(3),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tabla_nCargo" (
-  "codigo_cargo" varchar(3),
-  "nombre_cargo" varchar(10)
-);
-
-CREATE TABLE "Tb_nuSeccion" (
-  "codigo_secci" varchar(3),
-  "nombre_secci" varchar(10)
-);
-
-CREATE TABLE "Tb_inscripci" (
-  "cod_inscripc" varchar(3),
-  "cod_anoSecci" varchar(3),
-  "codigo_estud" varchar(3),
-  "entra_tardia" date,
-  "salida_tempr" date
-);
-
-CREATE TABLE "Tb_doceSecci" (
-  "cod_doceSecc" varchar(3),
-  "cod_anoSecci" varchar(3),
-  "codigo_perso" varchar(3)
-);
-
-CREATE TABLE "Tb_anoSeccio" (
-  "cod_anoSecci" varchar(3),
-  "ano_Seccione" char(1),
-  "codigo_secci" char(3)
-);
-
-CREATE TABLE "Tb_colaborac" (
-  "cod_colabora" varchar(3),
-  "cod_inscripc" varchar(3),
-  "fecha_dPagos" date,
-  "monto_dPagoS" varchar(8)
-);
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("cod_amSocFam") REFERENCES "Tb_am_so_fam" ("cod_amSocFam");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("codigo_repre") REFERENCES "Tb_represent" ("codigo_repre");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("codigo_madre") REFERENCES "Tb_madreNino" ("codigo_madre");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("codigo_padre") REFERENCES "Tb_padreNino" ("codigo_padre");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("cod_contEmer") REFERENCES "Tb_cont_emer" ("cod_contEmer");
-
-ALTER TABLE "Tb_represent" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_padreNino" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_madreNino" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_cont_emer" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_nPersonal" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_am_so_fam" ADD FOREIGN KEY ("cod_caracter") REFERENCES "Tb_caracteri" ("cod_caracter");
-
-ALTER TABLE "Tb_am_so_fam" ADD FOREIGN KEY ("cod_tenencia") REFERENCES "Tb_tenencia" ("cod_tenencia");
-
-ALTER TABLE "Tb_probl_nac" ADD FOREIGN KEY ("cod_enfePade") REFERENCES "Tb_enferPade" ("cod_enfePade");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("cod_probNace") REFERENCES "Tb_probl_nac" ("cod_probNace");
-
-ALTER TABLE "Tb_estudiant" ADD FOREIGN KEY ("cod_antePren") REFERENCES "Tb_ante_pren" ("cod_antePren");
-
-ALTER TABLE "Tb_colaborac" ADD FOREIGN KEY ("cod_inscripc") REFERENCES "Tb_inscripci" ("cod_inscripc");
-
-ALTER TABLE "Tb_doceSecci" ADD FOREIGN KEY ("cod_anoSecci") REFERENCES "Tb_anoSeccio" ("cod_anoSecci");
-
-ALTER TABLE "Tb_anoSeccio" ADD FOREIGN KEY ("codigo_secci") REFERENCES "Tb_nuSeccion" ("codigo_secci");
-
-ALTER TABLE "Tb_inscripci" ADD FOREIGN KEY ("codigo_estud") REFERENCES "Tb_estudiant" ("codigo_estud");
-
-ALTER TABLE "Tb_inscripci" ADD FOREIGN KEY ("cod_anoSecci") REFERENCES "Tb_anoSeccio" ("cod_anoSecci");
-
-ALTER TABLE "Tb_telefonop" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_nPersonal" ADD FOREIGN KEY ("codigo_cargo") REFERENCES "Tabla_nCargo" ("codigo_cargo");
-
-ALTER TABLE "Tb_doceSecci" ADD FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso");
-
-ALTER TABLE "Tb_ante_pren" ADD FOREIGN KEY ("cod_codiPart") REFERENCES "Tb_codicPart" ("cod_codiPart");
-
-
-    `);
+  executeStatements();
 });
-
-// Cerrar conexión
-db.close();

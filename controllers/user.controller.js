@@ -6,17 +6,7 @@ const User = require('../models/user.model.js');
 
 // Función para mostrar usuarios (GET)
 exports.testUsers = async (req, res) => {
-  try {
-    const users = await User.getAll();
-    res.render('testpost', { 
-      title: 'Usuarios (Prueba)',
-      users: users 
-    });
-    console.log('Usuarios obtenidos:', users);
-  } catch (error) {
-    console.error('Error al obtener usuarios:', error);
-    res.status(500).send('Error en el servidor');
-  }
+  res.render('testpost');
 };
 
 // Función para crear un nuevo usuario (POST)
@@ -36,6 +26,12 @@ exports.createUser = async (req, res) => {
   }
 };
 
+
+exports.Inscription = async (req, res) => {
+  // Verifica que el body esté llegando correctamente
+  console.log('Datos recibidos en req.body:', req.body);
+  res.status(200).send('Inscripción recibida');
+}
 
 exports.generateEnrollmentForm = async (req, res) => {
   try {

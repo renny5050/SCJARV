@@ -3,12 +3,12 @@
 <div class="row mb-3">
   <div class="col-md-4">
     <label class="form-label">Personas que viven en el hogar</label>
-    <select class="form-select" name="hogar_personas" required>
-      <option value="">Seleccione</option>
-      <option value="Ninos">Niños</option>
-      <option value="Adultos">Adultos</option>
-      <option value="Ninos y Adultos">Niños y Adultos</option>
-    </select>
+    <div class="mb-2">
+      <input type="number" class="form-control" name="num_ninos" min="0" placeholder="Número de niños" required>
+    </div>
+    <div>
+      <input type="number" class="form-control" name="num_adultos" min="0" placeholder="Número de adultos" required>
+    </div>
   </div>
   <div class="col-md-4">
     <label class="form-label">Características de la vivienda</label>

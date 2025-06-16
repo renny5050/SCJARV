@@ -25,13 +25,6 @@
     <input type="date" class="form-control" name="fecha_nacimiento" required>
   </div>
   <div class="col-md-3">
-    <label class="form-label">Edad</label>
-    <div class="input-group">
-      <input type="number" class="form-control" name="edad_anios" placeholder="Años">
-      <input type="number" class="form-control" name="edad_meses" placeholder="Meses">
-    </div>
-  </div>
-  <div class="col-md-3">
     <label class="form-label">Sexo</label>
     <select class="form-select" name="sexo" required>
       <option value="">Seleccione</option>
@@ -52,21 +45,15 @@
 <div class="row mb-3">
   <div class="col-md-3">
     <label class="form-label">Cédula Escolar</label>
-    <input type="text" class="form-control" name="cedula_escolar">
+    <input type="text" class="form-control" name="cedu_escolar">
   </div>
   <div class="col-md-3">
     <label class="form-label">Peso</label>
-    <div class="input-group">
-      <input type="number" class="form-control" name="peso_kg" placeholder="Kg">
-      <input type="number" class="form-control" name="peso_g" placeholder="g">
-    </div>
+    <input type="number" class="form-control" name="peso_kg" placeholder="Kg">
   </div>
   <div class="col-md-3">
     <label class="form-label">Talla</label>
-    <div class="input-group">
-      <input type="number" class="form-control" name="talla_m" placeholder="m">
-      <input type="number" class="form-control" name="talla_cm" placeholder="cm">
-    </div>
+    <input type="number" class="form-control" name="talla_m" placeholder="m">
   </div>
   <div class="col-md-3">
     <label class="form-label">Fecha de Inscripción</label>
@@ -77,11 +64,11 @@
 <div class="row mb-3">
   <div class="col-md-3">
     <label class="form-label">Estado de Nacimiento</label>
-    <input type="text" class="form-control" name="estado_nacimi" required>
+    <input type="text" class="form-control" name="estad_nacimi" required>
   </div>
   <div class="col-md-3">
     <label class="form-label">Municipio de Nacimiento</label>
-    <input type="text" class="form-control" name="municipio_nacimi" required>
+    <input type="text" class="form-control" name="munic_nacimi" required>
   </div>
   <div class="col-md-3">
     <label class="form-label">Viene Promovido de:</label>
@@ -91,5 +78,28 @@
     <label class="form-label">Institución</label>
     <input type="text" class="form-control" name="institucion">
   </div>
+  <div class="row">
+  <!-- Grupo Sanguíneo -->
+  <div class="col-md-3">
+    <label class="form-label">Grupo Sanguíneo</label>
+    <select class="form-select" name="grupo_sangui">
+      <option value="">Seleccione</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="AB">AB</option>
+      <option value="O">O</option>
+    </select>
+  </div>
+
+  <!-- Tipo (Factor Rh) -->
+  <div class="col-md-3">
+    <label class="form-label">Tipo (Factor Rh)</label>
+    <select class="form-select" name="tip_sangrees">
+      <option value="">Seleccione</option>
+      <option value="+">Positivo (+)</option>
+      <option value="-">Negativo (-)</option>
+    </select>
+  </div>
+</div>
 </div>
             

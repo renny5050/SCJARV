@@ -22,7 +22,8 @@
     
     <!-- Contenido principal -->
     <main id="content">
-        <form id="inscriptionForm" enctype="multipart/form-data">
+        <!-- Cambia el método a POST y añade la acción -->
+        <form id="inscriptionForm" method="POST" action="/inscripcion">
             <!-- Sección 1: Datos del Estudiante -->
             <%- include('partials/student-data') %>
             
@@ -37,21 +38,25 @@
 
             
             <!-- Sección 5: Ambiente Socio Familiar -->
-            <%- include('partials/Sociofamiliar-data') %>
+            <%- include('partials/sociofamiliar-data') %>
 
             <!-- Sección 6: Antecedentes prenatales -->
             <%- include('partials/medical-data') %>
 
             <!-- Botón de envío -->
-            <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-success btn-lg">
-                    <i class="bi bi-save me-2"></i> Guardar Inscripción
-                </button>
-            </div>
+            
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-save me-2"></i> Guardar Inscripción
+                    </button>
+                </div>
+            
         </form>
     </main>
 
+    <!-- Formulario mínimo de prueba -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<%= '/js/inscription.js' %>"></script>
+    <!-- Elimina la referencia al JavaScript si no es necesario -->
 </body>
 </html>
