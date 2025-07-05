@@ -1,7 +1,13 @@
 const express = require('express');
-const User = require('./controllers/user.controller.js');
-const Inscription = require('./controllers/inscription.controller.js');
-const Student = require('./controllers/student.controller.js');
+const inscripcion = require('./controllers/inscripcion.controller.js');
+const estudiante = require('./controllers/estudiante.controller.js');
+const seccion = require('./controllers/seccion.controller.js');
+const anioSeccion = require('./controllers/anioSeccion.controller.js');
+const estudianteSeccion = require('./controllers/estudianteSeccion.controller.js');
+const docente = require('./controllers/docente.controller.js');
+const representante = require('./controllers/representantes.controller.js');
+const colaboracion = require('./controllers/colab.controller.js');
+
 
 const app = express();
 const port = 3000;
@@ -15,40 +21,69 @@ app.use(express.json());
 
 //RUTAS PARA EL SIDEBAR
 app.get('/inscripcion', (req, res) => {
-    res.render('inscription');
+    res.render('page-inscripcion');
 });
 
-app.post('/inscripcion', Inscription.postInscription);
+app.post('/inscripcion', inscripcion.subirInscripcion);
 
-app.get('/donaciones', (req, res) => {
-    res.render('donaciones');
-});
+app.get('/inscripcionexitosa/:cedulaEscolar', inscripcion.inscripcionExitosa);
 
-app.get('/estudiantes', Student.Load);
+app.get('/pdf/:cedulaEscolar', inscripcion.generarPDF);
 
-app.get('/estudiante/:id', Student.ShowDetails);
+app.get('/estudiantes', estudiante.cargarEstudiantes);
 
-app.get('/estudiante/:id/representante', Student.ShowTutor);
+app.get('/estudiante/:id', estudiante.detallesEstudiante);
 
-app.get('/estudiante/:id/madre', Student.ShowMother);
+app.get('/estudiante/:id/representante', estudiante.detallesRepresentante);
 
-app.get('/estudiante/:id/padre', Student.ShowFather);
+app.get('/estudiante/:id/madre', estudiante.detallesMadre);
 
-app.get('/estudiante/:id/emergencia', Student.ShowEmergen);
+app.get('/estudiante/:id/padre', estudiante.detallesPadre);
 
-app.get('/estudiante/:id/ambiente', Student.ShowSocFam);
+app.get('/estudiante/:id/emergencia', estudiante.detallesEmergencia);
 
-app.get('/estudiante/:id/nacimiento', Student.ShowProbNac);
+app.get('/estudiante/:id/ambiente', estudiante.detallesSocioFamiliar);
 
-app.get('/estudiante/:id/prenatal', Student.ShowAntePren);
+app.get('/estudiante/:id/nacimiento', estudiante.detallesProblemasNacimiento);
 
-app.get('/test', User.testUsers);
+app.get('/estudiante/:id/prenatal', estudiante.detallesAntecedentesPrenatales);
 
-// Ruta POST para crear un nuevo usuario
-app.post('/test', User.createUser); // ✅ Nueva ruta POST
+app.get('/secciones', seccion.listarSecciones);
 
-app.get('/users/pdftest', User.generateEnrollmentForm);
+app.get('/secciones/:cedulaEscolar', seccion.listarSecciones);
+
+app.post('/secciones', seccion.crearSeccion);
+
+app.post('/secciones/:id/eliminar', seccion.eliminarSeccion);
+
+app.post('/seccion/:id', anioSeccion.crearAnoSeccion);
+
+app.post('/seccion/:id/eliminar', anioSeccion.eliminarAnoSeccion);
+
+app.get('/seccion/:id', anioSeccion.listarAnoSeccion);
+
+app.get('/seccion/:id/:cedulaEscolar', anioSeccion.listarAnoSeccion);
+
+app.get('/cursantes/:id', estudianteSeccion.mostrarInscripciones);
+
+app.get('/cursantes/:id/:cedulaEscolar', estudianteSeccion.inscribirEstudianteRedireccion);
+
+app.post('/cursantes/:id/agregar', estudianteSeccion.inscribirEstudiante);
+
+app.get('/docentes', docente.listarDocentes);
+
+app.post('/docentes', docente.crearDocente);
+
+app.get('/representantes', representante.cargarRepresentantes);
+
+app.get('/representante/:id', representante.detallesRepresentante);
+
+app.get('/colaboraciones', colaboracion.cargarPagina);
+
+app.get('/colaboraciones/nueva', colaboracion.crearColaboracion);
+
+
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+    console.log(`Server ejecutándose en: http://localhost:${port}/`);
 });

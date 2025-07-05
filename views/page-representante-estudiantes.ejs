@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="<%= '/css/layoutStyles.css' %>">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0 !important;
+        }
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .student-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        .student-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .student-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .student-table tr:hover {
+            background-color: #e9f7fe;
+        }
+        .detail-link {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .detail-link:hover {
+            text-decoration: underline;
+        }
+        .no-students {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/partial-sidebar') %>
+    
+    <!-- Header -->
+    <%- include('partials/partial-header') %>
+    <main id="content">
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-tie me-2"></i><%= title %></h1>
+        </div>
+        
+        <!-- Lista de Estudiantes Representados -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user-graduate me-2"></i>Estudiantes Representados
+                <span class="badge bg-secondary float-end"><%= estudiantes.length %></span>
+            </div>
+            <div class="card-body">
+                <% if (estudiantes.length > 0) { %>
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula Escolar</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% estudiantes.forEach(est => { %>
+                                <tr>
+                                    <td><%= est.codigo_estud %></td>
+                                    <td>
+                                        <%= est.primer_nombr %> 
+                                        <%= est.segundo_nomb || '' %> 
+                                        <%= est.primer_apell %> 
+                                        <%= est.segundo_apellido || '' %>
+                                    </td>
+                                    <td><%= est.cedu_escolar %></td>
+                                    <td><%= est.fecha_nacimiento_formatted %></td>
+                                    <td>
+                                        <a href="/estudiante/<%= est.codigo_estud %>" class="detail-link">
+                                            <i class="fas fa-info-circle"></i> Ver Detalles
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div class="no-students">
+                        <i class="fas fa-user-graduate fa-3x mb-3"></i>
+                        <p>No se encontraron estudiantes representados por esta persona.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/representantes" class="btn btn-back">
+                <i class="fas fa-arrow-left me-1"></i> Volver a la lista
+            </a>
+        </div>
+    </div>
+    </main>
+    
+    <script src="<%= '../js/bootstrap.bundle.min.js' %>"></script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <link href="<%= '../css/bootstrap.min.css' %>" rel="stylesheet">
+    <link rel="stylesheet" href="<%= '/css/layoutStyles.css' %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-light: #5dade2;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --secondary-light: #34495e;
+            --success: #28a745;
+            --success-light: #58d68d;
+            --danger: #e74c3c;
+            --danger-light: #ec7063;
+            --light: #f8f9fa;
+            --gray-light: #ecf0f1;
+            --gray-medium: #bdc3c7;
+            --gray-dark: #7f8c8d;
+            --transition: all 0.3s ease;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        /* Header mejorado */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .page-header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-header .lead {
+            opacity: 0.9;
+            font-weight: 300;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Sección de formulario */
+        .form-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .form-section:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.2));
+            color: var(--primary);
+            font-size: 1.8rem;
+            transition: var(--transition);
+        }
+
+        .form-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-title {
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .form-description {
+            color: var(--gray-dark);
+            margin: 0;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            height: 100%;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-control-custom {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-control-custom:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+
+        .form-label-custom {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+            display: block;
+        }
+
+        /* Tarjeta de estudiantes */
+        .student-card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border: none;
+            overflow: hidden;
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            padding: 18px 25px;
+            border-bottom: none;
+            font-size: 1.1rem;
+        }
+
+        .card-icon {
+            margin-right: 10px;
+        }
+
+        /* Tabla mejorada */
+        .student-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95rem;
+        }
+
+        .student-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .student-table th {
+            background-color: #e3f2fd;
+            padding: 16px 15px;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--primary);
+            text-align: left;
+        }
+
+        .student-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+            transition: var(--transition);
+        }
+
+        .student-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .student-table tr:hover td {
+            background-color: #f5f9ff;
+        }
+
+        /* Estilo para la cédula escolar */
+        .cedula-display {
+            font-weight: 600;
+            color: var(--primary);
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* Badges de estado */
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .status-active {
+            background-color: #e9f7ef;
+            color: var(--success);
+            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.1);
+        }
+        
+        .status-inactive {
+            background-color: #fce8e6;
+            color: var(--danger);
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1);
+        }
+
+        /* Mensaje cuando no hay estudiantes */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: var(--border-radius);
+            background: #f8fafc;
+            margin: 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state-title {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            color: var(--gray-dark);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            #content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .page-header {
+                padding: 25px 0;
+                margin-bottom: 25px;
+            }
+            
+            .form-section {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header .lead {
+                font-size: 1rem;
+            }
+            
+            .form-header {
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            
+            .form-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .form-section .row > div {
+                margin-bottom: 15px;
+            }
+            
+            .student-table th, 
+            .student-table td {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .student-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .page-header {
+                padding: 20px 0;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/partial-sidebar') %>
+    
+    <!-- Header -->
+    <%- include('partials/partial-header') %>
+
+    <main id="content">
+        <!-- Encabezado de página -->
+        <div class="page-header fade-in">
+            <div class="page-header-content">
+                <h1><i class="fas fa-users me-2"></i> <%= title %></h1>
+                <p class="lead mb-0">Gestión de estudiantes por sección</p>
+            </div>
+        </div>
+
+        <!-- Sección de formulario -->
+        <div class="form-section fade-in delay-1">
+            <div class="form-header">
+                <div class="form-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div>
+                    <h3 class="form-title">Agregar Nuevo Estudiante</h3>
+                    <p class="form-description">Ingresa la cédula escolar para inscribir al estudiante en esta sección.</p>
+                </div>
+            </div>
+            
+            <form action="/cursantes/<%= cod_anoSecci %>/agregar" method="POST">
+                <input type="hidden" name="cod_anoSecci" value="<%= cod_anoSecci %>">
+                <div class="row align-items-center">
+                    <div class="col-md-8 mb-3 mb-md-0">
+                        <label for="cedu_escolar" class="form-label-custom">Cédula Escolar</label>
+                        <input type="text" class="form-control form-control-custom" id="cedu_escolar" name="cedu_escolar" 
+                               placeholder="Ej: V-31000111 ó 11222333" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary-custom w-100">
+                            <i class="fas fa-plus-circle me-2"></i>Agregar Estudiante
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tarjeta de estudiantes inscritos -->
+        <div class="student-card fade-in delay-2">
+            <div class="card-header-custom">
+                <i class="fas fa-list-ul card-icon"></i>Estudiantes Inscritos
+            </div>
+
+            <div class="row px-4 py-3">
+                <div class="col-md-6 mb-2">
+                    <label class="form-label-custom">Docente Principal</label>
+                    <div class="form-control-plaintext"><%= docente_prin.primer_nombr %> <%= docente_prin.primer_apell %></div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label-custom">Docente Secundario</label>
+                    <div class="form-control-plaintext"><%= docente_secu.primer_nombr %> <%= docente_secu.primer_apell %></div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <% if (estudiantes.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="student-table">
+                            <thead>
+                                <tr>
+                                    <th>Cédula Escolar</th> <!-- Cambiado de "Código" a "Cédula Escolar" -->
+                                    <th>Nombre Completo</th>
+                                    <th>Fecha Nacimiento</th>
+                                    <th>Sexo</th>
+                                    <th>Tipo Sangre</th>
+                                    <th class="text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% estudiantes.forEach((est, index) => { %>
+                                    <tr>
+                                        <!-- Mostrar cedu_escolar en lugar de codigo_estud -->
+                                        <td>
+                                            <span class="cedula-display"><%= est.cedu_escolar %></span>
+                                        </td>
+                                        <td><%= est.nombreCompleto %></td>
+                                        <td><%= est.fechaNac %></td>
+                                        <td><%= est.sexo === 'M' ? 'Masculino' : 'Femenino' %></td>
+                                        <td><%= est.tieneTipoSangre %></td>
+                                        <td class="text-center">
+                                            <span class="status-badge <%= est.estado === 'Activo' ? 'status-active' : 'status-inactive' %>">
+                                                <%= est.estado %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <i class="fas fa-info-circle empty-state-icon"></i>
+                        <h3 class="empty-state-title">No hay estudiantes registrados</h3>
+                        <p class="empty-state-text">Utiliza el formulario superior para comenzar a agregar estudiantes a esta sección.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <script src="<%= '../js/bootstrap.bundle.min.js' %>"></script>
+    <script>
+        // Añadir clase para animación al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                fadeElements.forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

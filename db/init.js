@@ -23,7 +23,10 @@ const statements = [
   "status_perso" BOOLEAN,
   "prin_telefono" VARCHAR(12),
   "sec_telefono" VARCHAR(12),
-  "cas_telefono" VARCHAR(12)
+  "cas_telefono" VARCHAR(12),
+  "estado_civil" VARCHAR(10),
+  "ocupacion_p" VARCHAR(20),
+  "docente" BOOLEAN DEFAULT 0
 );`,
 
 `CREATE TABLE IF NOT EXISTS "Tabla_nCargo" (
@@ -89,21 +92,15 @@ const statements = [
   FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
 );`,
 
-`CREATE TABLE IF NOT EXISTS "Tb_nPersonal" (
-  "cod_personal" INTEGER PRIMARY KEY,
-  "fecha_entrad" DATE,
-  "fecha_salida" DATE,
-  "codigo_cargo" INTEGER,
-  "codigo_perso" INTEGER,
-  FOREIGN KEY ("codigo_cargo") REFERENCES "Tabla_nCargo" ("codigo_cargo"),
-  FOREIGN KEY ("codigo_perso") REFERENCES "Tb_nupersona" ("codigo_perso")
-);`,
-
 `CREATE TABLE IF NOT EXISTS "Tb_anoSeccio" (
   "cod_anoSecci" INTEGER PRIMARY KEY,
-  "ano_Seccione" CHAR(1),
+  "ano_Seccione" INTEGER,
   "codigo_secci" INTEGER,
+  "docente_prin" INTEGER,
+  "docente_secu" INTEGER,
   FOREIGN KEY ("codigo_secci") REFERENCES "Tb_nuSeccion" ("codigo_secci")
+  FOREIGN KEY ("docente_prin") REFERENCES "Tb_nupersona" ("codigo_perso"),
+  FOREIGN KEY ("docente_secu") REFERENCES "Tb_nupersona" ("codigo_perso")
 );`,
 
 `CREATE TABLE IF NOT EXISTS "Tb_estudiant" (
@@ -121,6 +118,9 @@ const statements = [
   "munic_nacimi" TEXT,
   "cedu_escolar" VARCHAR(14),
   "status_estud" BOOLEAN,
+  "peso_kg" INTEGER,
+  "tall_cm" INTEGER,
+  "fecha_inscripcion" DATE,
   "codigo_repre" INTEGER,
   "codigo_padre" INTEGER,
   "codigo_madre" INTEGER,

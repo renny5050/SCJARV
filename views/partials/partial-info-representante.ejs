@@ -1,0 +1,74 @@
+<div class="section-title">2. Representante Legal</div>
+
+<form id="representativeForm">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label class="form-label">Primer Nombre</label>
+      <input type="text" class="form-control" name="rep_primer_nombr" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Segundo Nombre</label>
+      <input type="text" class="form-control" name="rep_segundo_nomb">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Primer Apellido</label>
+      <input type="text" class="form-control" name="rep_primer_apell" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Segundo Apellido</label>
+      <input type="text" class="form-control" name="rep_segund_apell">
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label class="form-label">Parentesco</label>
+      <input type="text" class="form-control" name="parentesco_r" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Cédula de Identidad</label>
+      <input type="text" class="form-control" name="rep_cedula" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Fecha de Nacimiento</label>
+      <input 
+        type="date" 
+        class="form-control" 
+        name="rep_fecha_nacimiento" 
+        id="rep_fecha_nacimiento"
+        required
+      >
+      <small class="text-muted">Debe tener al menos 18 años</small>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Teléfono</label>
+      <input type="text" class="form-control" name="rep_telefono" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">Dirección de Habitación</label>
+      <input type="text" class="form-control" name="rep_direccion" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Correo Electrónico</label>
+      <input type="email" class="form-control" name="rep_email" placeholder="******@gmail.com" required>
+    </div>
+  </div>
+</form>
+
+<script>
+  // Calcular fecha máxima para el representante (18 años antes de hoy)
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    const maxDateRepresentative = new Date();
+    maxDateRepresentative.setFullYear(today.getFullYear() - 18);
+    
+    // Formatear a YYYY-MM-DD
+    const formattedMaxDateRep = maxDateRepresentative.toISOString().split('T')[0];
+    
+    // Establecer el atributo max en el campo de fecha del representante
+    document.getElementById('rep_fecha_nacimiento').setAttribute('max', formattedMaxDateRep);
+  });
+</script>

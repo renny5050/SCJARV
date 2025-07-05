@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Estudiantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="<%= '/css/layoutStyles.css' %>">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow: hidden;
+        }
+        .student-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .student-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            border: none;
+        }
+        .student-table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
+        }
+        .student-table tr:last-child td {
+            border-bottom: none;
+        }
+        .student-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .student-table tr:hover {
+            background-color: #e9f7fe;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .action-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 6px 8px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .action-btn i {
+            margin-right: 5px;
+        }
+        .detail-btn { background-color: #3498db; }
+        .rep-btn { background-color: #2ecc71; }
+        .mother-btn { background-color: #9b59b6; }
+        .father-btn { background-color: #e67e22; }
+        .emergency-btn { background-color: #e74c3c; }
+        .family-btn { background-color: #16a085; }
+        .search-box {
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .pagination-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .student-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .student-info {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        .action-header {
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/partial-sidebar') %>
+    
+    <!-- Header -->
+    <%- include('partials/partial-header') %>
+    <main id="content">
+    <div class="container">
+        <div class="header text-center">
+            <h1><i class="fas fa-user-graduate me-2"></i>Registro de Estudiantes</h1>
+            <p class="lead mb-0">Información académica y datos personales</p>
+        </div>
+        
+        <div class="search-box">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar por cédula...">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search me-1"></i> Buscar
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table student-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Estudiante</th>
+                        <th>Cédula</th>
+                        <th class="action-header">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% students.forEach(function(student) { %>
+                        <tr>
+                            <td><%= student.codigo_estud %></td>
+                            <td>
+                                <div class="student-name">
+                                    <%= student.primer_nombr %> 
+                                    <%= student.segundo_nomb || '' %> 
+                                    <%= student.primer_apell %> 
+                                    <%= student.segundo_apellido || '' %>
+                                </div>
+                                <div class="student-info">
+                                    <%= student.sexo === 'M' ? 'Masculino' : 'Femenino' %> | 
+                                    <%= new Date(student.fecha_nacimiento).toLocaleDateString() %>
+                                </div>
+                            </td>
+                            <td><%= student.cedu_escolar %></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <!-- Detalles del estudiante -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>" 
+                                       class="btn action-btn detail-btn">
+                                        <i class="fas fa-info-circle"></i> Detalles
+                                    </a>
+                                    
+                                    <!-- Representante -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/representante" 
+                                       class="btn action-btn rep-btn">
+                                        <i class="fas fa-user-friends"></i> Representante
+                                    </a>
+                                    
+                                    <!-- Madre -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/madre" 
+                                       class="btn action-btn mother-btn">
+                                        <i class="fas fa-female"></i> Madre
+                                    </a>
+                                    
+                                    <!-- Padre -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/padre" 
+                                       class="btn action-btn father-btn">
+                                        <i class="fas fa-male"></i> Padre
+                                    </a>
+                                </div>
+                                <div class="action-buttons mt-2">
+                                    <!-- Contacto de emergencia -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/emergencia" 
+                                       class="btn action-btn emergency-btn">
+                                        <i class="fas fa-ambulance"></i> Emergencia
+                                    </a>
+                                    
+                                    <!-- Ambiente familiar -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/ambiente" 
+                                       class="btn action-btn family-btn">
+                                        <i class="fas fa-home"></i> Familiar
+                                    </a>
+                                    
+                                    <!-- Información de nacimiento -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/nacimiento" 
+                                       class="btn action-btn detail-btn">
+                                        <i class="fas fa-baby"></i> Nacimiento
+                                    </a>
+                                    
+                                    <!-- Antecedentes prenatales -->
+                                    <a href="/estudiante/<%= student.codigo_estud %>/prenatal" 
+                                       class="btn action-btn rep-btn">
+                                        <i class="fas fa-heartbeat"></i> Prenatal
+                                    </a>
+
+                                    <!-- Descargar PDF -->
+                                    <a href="/pdf/<%= student.cedu_escolar %>" 
+                                        class="btn action-btn family-btn">
+                                         <i class="fas fa-file-pdf"></i> PDF
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            
+            <div class="pagination-container">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    </main>
+    
+    <script src="<%= '../js/bootstrap.bundle.min.js' %>"></script>
+</body>
+</html>
