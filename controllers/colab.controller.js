@@ -1,7 +1,6 @@
-// controllers/colaboracion.controller.js
 const Colaboracion = require('../models/colab.model.js');
-const Estudiante = require('../models/estudiantes.model.js');
-const Inscripcion = require('../models/inscripciones.model.js');
+const Estudiante = require('../models/estudiante.model.js');
+const Inscripcion = require('../models/studentsection.model.js');
 
 exports.cargarPagina = async (req, res) => {
     try {
@@ -16,10 +15,7 @@ exports.cargarPagina = async (req, res) => {
         });
     } catch (error) {
         console.error('Error al cargar colaboraciones:', error);
-        res.status(500).render('error', {
-            message: 'Error interno del servidor',
-            error: error
-        });
+        res.status(500).send('Error al cargar colaboraciones');
     }
 };
 
@@ -95,6 +91,46 @@ exports.eliminarColaboracion = async (req, res) => {
             formData: null,
             studentInfo: null,
             error: 'Error al eliminar colaboración: ' + error.message
+        });
+    }
+};
+
+exports.verificarEstudiante = async (req, res) => {
+    try {
+        const { cedula_escolar } = req.body;
+        const estudiante = await Estudiante.obtenerEstudianteCedula(cedula_escolar);
+        
+        if (!estudiante) {
+            throw new Error('No se encontró un estudiante con esa cédula escolar');
+        }
+        
+        const inscripcion = await Inscripcion.obtenerUltimaInscripcionPorEstudiante(estudiante.codigo_estud);
+        
+        if (!inscripcion) {
+            throw new Error('El estudiante no tiene inscripciones registradas');
+        }
+        
+        const colaboraciones = await Colaboracion.obtenerColaboracionesConDetalles();
+        
+        res.render('page-colaboraciones', {
+            title: 'Gestión de Colaboraciones',
+            colaboraciones: colaboraciones,
+            formData: req.body,
+            studentInfo: {
+                estudiante,
+                inscripcion
+            },
+            error: null
+        });
+    } catch (error) {
+        const colaboraciones = await Colaboracion.obtenerColaboracionesConDetalles();
+        
+        res.render('page-colaboraciones', {
+            title: 'Gestión de Colaboraciones',
+            colaboraciones: colaboraciones,
+            formData: req.body,
+            studentInfo: null,
+            error: 'Error al verificar estudiante: ' + error.message
         });
     }
 };

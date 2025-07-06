@@ -80,7 +80,7 @@ app.get('/representante/:id', representante.detallesRepresentante);
 
 app.get('/colaboraciones', colaboracion.cargarPagina);
 
-app.get('/colaboraciones/nueva', colaboracion.crearColaboracion);
+app.post('/colaboraciones', colaboracion.crearColaboracion);
 
 
 

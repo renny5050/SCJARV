@@ -87,11 +87,16 @@ exports.obtenerEstudiantesNoInscritos = async (cod_anoSecci) => {
 };
 
 exports.obtenerUltimaInscripcionPorEstudiante = async (codigo_estud) => {
-    return await db.getAsync(
-        `SELECT * FROM Tb_inscripci 
-         WHERE codigo_estud = ? 
-         ORDER BY cod_inscripc DESC 
-         LIMIT 1`,
-        [codigo_estud]
-    );
+    const sql = `
+        SELECT 
+            i.*,
+            s.nombre_secci
+        FROM Tb_inscripci i
+        JOIN Tb_anoSeccio a ON i.cod_anoSecci = a.cod_anoSecci
+        JOIN Tb_nuSeccion s ON a.codigo_secci = s.codigo_secci
+        WHERE i.codigo_estud = ?
+        ORDER BY i.cod_inscripc DESC
+        LIMIT 1
+    `;
+    return await db.getAsync(sql, [codigo_estud]);
 };
