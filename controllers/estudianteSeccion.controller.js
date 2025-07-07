@@ -26,7 +26,7 @@ exports.mostrarInscripciones = async (req, res) => {
             tieneTipoSangre: est.tip_sangrees === 1 ? 'Sí' : 'No'
         }));
 
-        console.log('Estudiantes Inscritos:', estudiantesFormateados);
+        
 
         res.render('page-cursantes', {
             title: 'Estudiantes Inscritos',
@@ -44,8 +44,13 @@ exports.mostrarInscripciones = async (req, res) => {
 };
 
 
-exports.inscribirEstudiante = async (req, res) => {
-    const { cod_anoSecci, cedu_escolar } = req.body;
+exports.inscribirEstudiante = async (req, res) => {console.log('INSCRIPCION DE ESTUDIANTE');
+    const cod_anoSecci = req.params.id;
+    const  cedu_escolar  = req.body.cedu_escolar;
+    console.log('INSCRIPCION DE ESTUDIANTE');
+    console.log('Cedula Escolar recibida:', cedu_escolar);
+    console.log('Código de Año-Sección:', cod_anoSecci);
+
     
     try {
         const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
@@ -71,7 +76,7 @@ exports.inscribirEstudiante = async (req, res) => {
             return res.status(500).send('Error al inscribir al estudiante');
         }
 
-        res.redirect('/cursantes/' + cod_anoSecci);
+        res.redirect('/cursante/' + cod_anoSecci);
 
     } catch (error) {
         console.error('Error al inscribir estudiante:', error);
@@ -81,8 +86,8 @@ exports.inscribirEstudiante = async (req, res) => {
 
 exports.inscribirEstudianteRedireccion = async (req, res) => {
     
-    const cod_anoSecci = req.params.id; 
-    const cedu_escolar = req.params.cedulaEscolar;
+    const cod_anoSecci = req.body.cod_anoSecci; 
+    const cedu_escolar = req.body.cedu_escolar;
 
     console.log('Cedula Escolar recibida:', cedu_escolar);
     

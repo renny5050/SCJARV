@@ -406,3 +406,33 @@ exports.detallesAntecedentesPrenatales = async (req, res) => {
     }
 };
 
+exports.buscarEstudiantePorCedula = async (req, res) => {
+    try {
+        const cedula = req.query.cedulaEscolar;
+        if (!cedula) {
+            return res.status(400).send('Cédula escolar es requerida para la búsqueda');
+        }
+
+        const student = await Student.obtenerEstudianteCedula(cedula);
+
+        if (!student) {
+            return res.status(404).render('page-estudiantes', {
+                title: 'Resultado de búsqueda',
+                students: []
+            });
+        }
+
+        student.tip_sangrees = student.tip_sangrees ? "+" : "-";
+        student.fecha_nacimiento_formatted = new Date(student.fecha_nacimiento).toLocaleDateString();
+        student.status_estud_text = student.status_estud ? 'Activo' : 'Inactivo';
+        student.sexo_text = student.sexo === 'M' ? 'Masculino' : 'Femenino';
+
+        res.render('page-estudiantes', {
+            title: 'Resultado de búsqueda',
+            students: [student]
+        });
+    } catch (error) {
+        console.error('Error al buscar estudiante por cédula:', error);
+        res.status(500).send('Error interno del servidor al buscar estudiante');
+    }
+};

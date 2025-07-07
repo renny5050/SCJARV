@@ -20,6 +20,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
 //RUTAS PARA EL SIDEBAR
+
+app.get('/', (req, res) => {
+    res.redirect('/inscripcion');
+});
+
 app.get('/inscripcion', (req, res) => {
     res.render('page-inscripcion');
 });
@@ -31,6 +36,8 @@ app.get('/inscripcionexitosa/:cedulaEscolar', inscripcion.inscripcionExitosa);
 app.get('/pdf/:cedulaEscolar', inscripcion.generarPDF);
 
 app.get('/estudiantes', estudiante.cargarEstudiantes);
+
+app.get('/estudiantes/buscar/', estudiante.buscarEstudiantePorCedula);
 
 app.get('/estudiante/:id', estudiante.detallesEstudiante);
 
@@ -66,7 +73,7 @@ app.get('/seccion/:id/:cedulaEscolar', anioSeccion.listarAnoSeccion);
 
 app.get('/cursantes/:id', estudianteSeccion.mostrarInscripciones);
 
-app.get('/cursantes/:id/:cedulaEscolar', estudianteSeccion.inscribirEstudianteRedireccion);
+// app.post('/cursantes/agregar/', estudianteSeccion.inscribirEstudianteRedireccion);
 
 app.post('/cursantes/:id/agregar', estudianteSeccion.inscribirEstudiante);
 
@@ -75,6 +82,8 @@ app.get('/docentes', docente.listarDocentes);
 app.post('/docentes', docente.crearDocente);
 
 app.get('/representantes', representante.cargarRepresentantes);
+
+app.post('/representantes/buscar', representante.buscarRepresentantePorCedula);
 
 app.get('/representante/:id', representante.detallesRepresentante);
 

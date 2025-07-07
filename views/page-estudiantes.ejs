@@ -124,14 +124,14 @@
             <p class="lead mb-0">Información académica y datos personales</p>
         </div>
         
-        <div class="search-box">
+        <form class="search-box" method="GET" action="/estudiantes/buscar">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Buscar por cédula...">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search me-1"></i> Buscar
-                </button>
+            <input type="text" name="cedulaEscolar" class="form-control" placeholder="Buscar por cédula..." required>
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search me-1"></i> Buscar
+            </button>
             </div>
-        </div>
+        </form>
         
         <div class="table-container">
             <table class="table student-table">

@@ -82,3 +82,43 @@ exports.detallesRepresentante = async (req, res) => {
         });
     }
 };
+
+exports.buscarRepresentantePorCedula = async (req, res) => {
+    try {
+        const cedula = req.body.cedulaRepresentante;
+        console.log('Cédula del representante recibida:', cedula);
+        if (!cedula) {
+            return res.status(400).send('Cédula del representante es requerida para la búsqueda');
+        }
+
+        const persona = await Persona.obtenerPersonaPorCedula(cedula);
+        if (!persona) {
+            return res.status(404).render('page-representantes', {
+                title: 'Resultado de búsqueda',
+                representantes: []
+            });
+        }
+
+        const representante = await Representante.obtenerRepresentantePorPersona(persona.codigo_perso);
+        if (!representante) {
+            return res.status(404).render('page-representantes', {
+                title: 'Resultado de búsqueda',
+                representantes: []
+            });
+        }
+
+        const representanteCompleto = {
+            ...representante,
+            ...persona,
+            fech_nacimie_formatted: new Date(persona.fech_nacimie).toLocaleDateString()
+        };
+
+        res.render('page-representantes', {
+            title: 'Resultado de búsqueda',
+            representantes: [representanteCompleto]
+        });
+    } catch (error) {
+        console.error('Error al buscar representante por cédula:', error);
+        res.status(500).send('Error interno del servidor al buscar representante');
+    }
+};
