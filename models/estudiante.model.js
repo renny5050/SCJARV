@@ -187,4 +187,3 @@ exports.obtenerEstudiantesPorRepresentanteYAnio = async (codigo_repre, anio) => 
         status_estud: row.status_estud === 1
     }));
 };
-

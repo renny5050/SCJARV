@@ -278,13 +278,7 @@
                 <input type="text" class="form-control" name="ocupacion_p" value="Docente" readonly>
             </div>
             <!-- Status -->
-            <div class="col-md-6">
-                <label class="form-label d-block">Status</label>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" name="status_perso" value="1" role="switch">
-                    <label class="form-check-label">Activo</label>
-                </div>
-            </div>
+            
             <!-- Botón de envío -->
             <div class="col-12 mt-3">
                 <button type="submit" class="btn btn-success w-100 py-3">
@@ -312,7 +306,7 @@
                                     <th>Nombre</th>
                                     <th>Cédula</th>
                                     <th>Correo</th>
-                                    <th>Status</th>
+                                    
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -327,16 +321,10 @@
                                         <td><%= `${docente.primer_nombr} ${docente.segundo_nomb || ''} ${docente.primer_apell} ${docente.segund_apell || ''}`.trim() %></td>
                                         <td><%= docente.cedula_perso %></td>
                                         <td><%= docente.correo_perso %></td>
-                                        <td>
-                                            <% if (docente.status_perso) { %>
-                                                <span class="badge bg-success">Activo</span>
-                                            <% } else { %>
-                                                <span class="badge bg-secondary">Inactivo</span>
-                                            <% } %>
-                                        </td>
+                                        
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
-                                                <form action="/docentes/<%= docente.codigo_perso %>/delete" method="POST" class="d-inline">
+                                                <form action="/docentes/<%= docente.codigo_perso %>/borrar" method="POST" class="d-inline">
                                                     <input type="hidden" name="_method" value="DELETE">
                                                     <button type="submit" class="btn btn-danger btn-action" 
                                                             title="Eliminar docente"
@@ -344,11 +332,7 @@
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>
-                                                <form action="/docentes/<%= docente.codigo_perso %>/edit" method="GET" class="d-inline">
-                                                    <button type="submit" class="btn btn-primary btn-action" title="Editar docente">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                </form>
+                                                
                                             </div>
                                         </td>
                                     </tr>

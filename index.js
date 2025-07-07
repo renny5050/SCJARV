@@ -21,6 +21,8 @@ app.use(express.json());
 
 //RUTAS PARA EL SIDEBAR
 
+app.get('/datos', estudiante.contarEstudiantesPorGenero);
+
 app.get('/', (req, res) => {
     res.redirect('/inscripcion');
 });
@@ -77,9 +79,13 @@ app.get('/cursantes/:id', estudianteSeccion.mostrarInscripciones);
 
 app.post('/cursantes/:id/agregar', estudianteSeccion.inscribirEstudiante);
 
+app.get('/cursantes/:id/:cedulaEscolar', estudianteSeccion.inscribirEstudianteEnlace);
+
 app.get('/docentes', docente.listarDocentes);
 
 app.post('/docentes', docente.crearDocente);
+
+app.post('/docentes/:id/borrar', docente.eliminarDocente);
 
 app.get('/representantes', representante.cargarRepresentantes);
 
@@ -90,6 +96,8 @@ app.get('/representante/:id', representante.detallesRepresentante);
 app.get('/colaboraciones', colaboracion.cargarPagina);
 
 app.post('/colaboraciones', colaboracion.crearColaboracion);
+
+app.post('/colaboraciones/:id', colaboracion.eliminarColaboracion);
 
 
 

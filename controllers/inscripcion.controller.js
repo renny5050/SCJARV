@@ -114,7 +114,7 @@ const obtenerInscripcionCompleta = async (cedulaEscolar) => {
             emer_nacionalidad: personaEmergencia.nacionalidad,
 
             // ... resto de campos de emergencia
-            
+            nombre_secci: seccionData.nombre_secci,
             // Datos complementarios
             ...ambienteSocio,
             ...antecedentesPren,
@@ -153,7 +153,7 @@ exports.generarPDF = async (req, res) => {
 
         // Configurar respuesta HTTP
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="ficha_${studentData.cedula_escolar}.pdf"`);
+        res.setHeader('Content-Disposition', `attachment; filename="ficha_${studentData.cedu_escolar}.pdf"`);
         
         // Pipe el PDF a la respuesta
         doc.pipe(res);
@@ -240,7 +240,7 @@ doc.font('Helvetica')
         doc.font('Helvetica')
            .fontSize(13)
            .fillColor('#000')
-           .text(`Nombre completo: ${studentData.primer_nombr} ${studentData.segundo_nomb || ''} ${studentData.primer_apell} ${studentData.segundo_apellido || ''}`);
+           .text(`Nombre completo: ${studentData.primer_nombr} ${studentData.segundo_nomb || ''} ${studentData.primer_apell || studentData.primer_apellido || ''} ${studentData.segund_apell || studentData.segundo_apellido || ''}`);
         
         doc.text(`Fecha de nacimiento: ${studentData.fecha_nacimiento} | Sexo: ${studentData.sexo === 'M' ? 'Masculino' : 'Femenino'} | Nacionalidad: ${studentData.nacionalidad}`);
         
@@ -250,7 +250,7 @@ doc.font('Helvetica')
         const rh = studentData.tip_sangrees ? '+' : '-';
         doc.text(`Tipo de sangre: ${studentData.grupo_sangui}${rh} | Peso: ${studentData.peso_kg} kg | Talla: ${studentData.tall_cm} m`);
         
-        doc.text(`Procedencia: ${studentData.nombre_secci} | Institución anterior: ${studentData.institucion}`);
+        doc.text(`Procedencia: ${studentData.nombre_secci || ''} | Institución anterior: ${studentData.institucion || ''}`);
         doc.moveDown(1);
 
         // Datos del representante
@@ -262,7 +262,7 @@ doc.font('Helvetica')
         
         doc.font('Helvetica')
            .fontSize(13)
-           .text(`Nombre completo: ${studentData.rep_primer_nombr} ${studentData.rep_segundo_nomb || ''} ${studentData.rep_primer_apell} ${studentData.rep_segund_apell || ''}`);
+           .text(`Nombre completo: ${studentData.rep_primer_nombr} ${studentData.rep_segundo_nomb || ''} ${studentData.rep_primer_apell || studentData.rep_primer_apellido || ''} ${studentData.rep_segund_apell || studentData.rep_segundo_apellido || ''}`);
         
         doc.text(`Cédula: ${studentData.rep_cedula} | Parentesco: ${studentData.parentesco_r} | Fecha nacimiento: ${studentData.rep_fecha_nacimiento}`);
         
@@ -286,7 +286,7 @@ doc.font('Helvetica')
         
         doc.font('Helvetica')
            .fontSize(13)
-           .text(`Nombre: ${studentData.madre_primer_nombr} ${studentData.madre_segundo_nomb || ''} ${studentData.madre_primer_apell} ${studentData.madre_segundo_apell || ''}`);
+           .text(`Nombre: ${studentData.madre_primer_nombr} ${studentData.madre_segundo_nomb || ''} ${studentData.madre_primer_apell || studentData.madre_primer_apellido || ''} ${studentData.madre_segund_apell || studentData.madre_segundo_apellido || ''}`);
         
         doc.text(`Cédula: ${studentData.madre_cedula} | Estado civil: ${studentData.madre_estado_civil} | Ocupación: ${studentData.madre_ocupacion}`);
         
@@ -303,7 +303,7 @@ doc.font('Helvetica')
         
         doc.font('Helvetica')
            .fontSize(13)
-           .text(`Nombre: ${studentData.padre_primer_nombr} ${studentData.padre_segundo_nomb || ''} ${studentData.padre_primer_apell} ${studentData.padre_segundo_apell || ''}`);
+           .text(`Nombre: ${studentData.padre_primer_nombr} ${studentData.padre_segundo_nomb || ''} ${studentData.padre_primer_apell || studentData.padre_primer_apellido || ''} ${studentData.padre_segund_apell || studentData.padre_segundo_apellido || ''}`);
         
         doc.text(`Cédula: ${studentData.padre_cedula} | Estado civil: ${studentData.padre_estado_civil} | Ocupación: ${studentData.padre_ocupacion}`);
         
@@ -321,11 +321,11 @@ doc.font('Helvetica')
         
         doc.font('Helvetica')
            .fontSize(13)
-           .text(`Nombre: ${studentData.emer_primer_nombre} ${studentData.emer_segundo_nombre || ''} ${studentData.emer_primer_apellido} ${studentData.emer_segundo_apellido || ''}`);
+           .text(`Nombre: ${studentData.emer_primer_nombre} ${studentData.emer_segundo_nombre || ''} ${studentData.emer_primer_apell || studentData.emer_primer_apellido || ''} ${studentData.emer_segund_apell || studentData.emer_segundo_apellido || ''}`);
         
-        doc.text(`Cédula: ${studentData.emer_cedula} | Edad: ${studentData.emer_edad} | Parentesco: ${studentData.emer_parentesco}`);
+        doc.text(`Cédula: ${studentData.emer_cedula} | Edad: ${studentData.emer_edad || ''} | Parentesco: ${studentData.emer_parentesco}`);
         
-        doc.text(`Ocupación: ${studentData.emer_ocupacion} | Teléfono: ${studentData.emer_telefono}`);
+        doc.text(`Ocupación: ${studentData.emer_ocupacion || ''} | Teléfono: ${studentData.emer_telefono}`);
         
         doc.text(`Dirección: ${studentData.emer_direccion}`);
         doc.moveDown(1);

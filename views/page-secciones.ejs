@@ -253,7 +253,7 @@
                         <table class="section-table">
                             <thead>
                                 <tr>
-                                    <th>Código</th>
+                                    
                                     <th>Nombre</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
@@ -261,11 +261,7 @@
                             <tbody>
                                 <% secciones.forEach(seccion => { %>
                                     <tr>
-                                        <td>
-                                            <span class="badge-code">
-                                                <%= seccion.codigo_secci %>
-                                            </span>
-                                        </td>
+                                        
                                         <td><%= seccion.nombre_secci %></td>
                                         <td class="text-center">
                                             <!-- Botón para gestionar años -->
@@ -282,13 +278,6 @@
                                                     <i class="fas fa-id-card"></i>
                                                 </a>
                                             
-                                            
-                                            <!-- Botón para editar -->
-                                            <a href="/secciones/<%= seccion.codigo_secci %>/editar" 
-                                               class="btn btn-primary btn-action" 
-                                               title="Editar sección">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
                                             
                                             <!-- Formulario para eliminar -->
                                             <form action="/secciones/<%= seccion.codigo_secci %>/eliminar" method="POST" class="d-inline">

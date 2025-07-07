@@ -76,7 +76,47 @@ exports.inscribirEstudiante = async (req, res) => {console.log('INSCRIPCION DE E
             return res.status(500).send('Error al inscribir al estudiante');
         }
 
-        res.redirect('/cursante/' + cod_anoSecci);
+        res.redirect('/cursantes/' + cod_anoSecci);
+
+    } catch (error) {
+        console.error('Error al inscribir estudiante:', error);
+        res.redirect('back');
+    }
+};
+
+exports.inscribirEstudianteEnlace = async (req, res) => {console.log('INSCRIPCION DE ESTUDIANTE');
+    const cod_anoSecci = req.params.id;
+    const  cedu_escolar  = req.params.cedulaEscolar;
+    console.log('INSCRIPCION DE ESTUDIANTE');
+    console.log('Cedula Escolar recibida:', cedu_escolar);
+    console.log('Código de Año-Sección:', cod_anoSecci);
+
+    
+    try {
+        const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
+        const codigo_estud = estudiante ? estudiante.codigo_estud : null;
+
+        if (!estudiante) {
+            return res.status(404).send('Estudiante no encontrado');
+        }
+        
+        const existeInscripcion = await studentSectionModel.existeInscripcion(cod_anoSecci, codigo_estud);
+
+        if (existeInscripcion) {
+            return res.status(400).send('El estudiante ya está inscrito en esta sección');
+        }
+
+        const inscripcion = await studentSectionModel.crearInscripcion({
+            cod_anoSecci: cod_anoSecci,
+            codigo_estud: codigo_estud
+        });
+
+        
+        if (!inscripcion) {
+            return res.status(500).send('Error al inscribir al estudiante');
+        }
+
+        res.redirect('/cursantes/' + cod_anoSecci);
 
     } catch (error) {
         console.error('Error al inscribir estudiante:', error);

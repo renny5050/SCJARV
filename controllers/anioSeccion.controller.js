@@ -59,8 +59,8 @@ exports.crearAnoSeccion = async (req, res) => {
     const  codigo_secci  = req.params.id;
     
     try {
-        await anoSeccionModel.crearAnoSeccion({ ano_Seccione, codigo_secci, docente_prin, docente_secu });
-        res.redirect('/cursantes/' + codigo_secci);
+        const cod_anoSecci = await anoSeccionModel.crearAnoSeccion({ ano_Seccione, codigo_secci, docente_prin, docente_secu });
+        res.redirect('/cursantes/' + cod_anoSecci);
     } catch (error) {
         console.error('Error al crear asignación año-sección:', error);
         res.redirect('/seccion/' + codigo_secci);

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conteo de Estudiantes por Género</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="<%= '/css/layoutStyles.css' %>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --masculino-color: #3498db;
+            --femenino-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        #content {
+            padding: 20px;
+            margin-top: 70px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            #content {
+                margin-left: 0;
+            }
+        }
+        
+        .page-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+        
+        .header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .gender-card {
+            width: 300px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .gender-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .masculino-card .card-header {
+            background: var(--masculino-color);
+        }
+        
+        .femenino-card .card-header {
+            background: var(--femenino-color);
+        }
+        
+        .card-header {
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .card-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .count-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .masculino-count {
+            color: var(--masculino-color);
+        }
+        
+        .femenino-count {
+            color: var(--femenino-color);
+        }
+        
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        
+        .masculino-icon {
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--masculino-color);
+        }
+        
+        .femenino-icon {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--femenino-color);
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .chart-container {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .chart-masculino {
+            height: 100%;
+            background: var(--masculino-color);
+            display: inline-block;
+        }
+        
+        .chart-femenino {
+            height: 100%;
+            background: var(--femenino-color);
+            display: inline-block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .gender-card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón para mostrar/ocultar sidebar en móviles -->
+    <button class="btn btn-primary toggle-btn" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+    
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="sidebar-logo mt-2" style="text-align:center; margin-bottom:20px;">
+            <img src="../../assets/images/Logo.png" alt="Logo" style="max-width: 50%; height: auto; border-radius: 20%;">
+        </div>
+        <ul class="list-unstyled">
+            <li><a href="/inscripcion" class="sidebar-link"><i class="bi bi-person-plus"></i> Inscripciones</a></li>
+            <li><a href="/estudiantes" class="sidebar-link"><i class="bi bi-people"></i> Estudiantes</a></li>
+            <li><a href="/representantes" class="sidebar-link"><i class="bi bi-person-vcard"></i> Representantes</a></li>
+            <li><a href="/docentes" class="sidebar-link"><i class="bi bi-journal-text"></i> Profesores</a></li>
+            <li><a href="/secciones" class="sidebar-link"><i class="bi bi-list-task"></i> Secciones</a></li>
+            <li><a href="/colaboraciones" class="sidebar-link"><i class="bi bi-wallet"></i> Colaboraciones</a></li>
+        </ul>
+    </div>
+    
+    <!-- Header -->
+    <header id="header" class="shadow-sm">
+        <div class="d-flex justify-content-between align-items-center h-100 px-4 position-relative">
+            <!-- Título centrado -->
+            <h3 class="mb-0 position-absolute start-50 translate-middle-x">C.E.I.S J.A. Román Valencillos</h3>
+            <!-- Menú Admin a la derecha -->
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main id="content">
+        <div class="page-container">
+            <div class="container">
+                <div class="header text-center">
+                    <h1><i class="bi bi-graph-up"></i> Conteo de Estudiantes por Género</h1>
+                    <p class="lead">Distribución de estudiantes según género en la institución</p>
+                </div>
+                
+                <div class="card-container">
+                    <div class="gender-card masculino-card">
+                        <div class="card-header">
+                            <i class="bi bi-gender-male"></i> Estudiantes Masculinos
+                        </div>
+                        <div class="card-body">
+                            <div class="icon-container masculino-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="count-number masculino-count"><%= masculinos %></div>
+                            <p>Estudiantes registrados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gender-card femenino-card">
+                        <div class="card-header">
+                            <i class="bi bi-gender-female"></i> Estudiantes Femeninos
+                        </div>
+                        <div class="card-body">
+                            <div class="icon-container femenino-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="count-number femenino-count"><%= femeninos %></div>
+                            <p>Estudiantes registradas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3 class="text-center mb-4"><i class="bi bi-pie-chart"></i> Resumen Estadístico</h3>
+                    
+                    <div class="chart-container">
+                        <% 
+                            const total = masculinos + femeninos;
+                            const masculinoPercent = total > 0 ? (masculinos / total * 100) : 0;
+                            const femeninoPercent = total > 0 ? (femeninos / total * 100) : 0;
+                        %>
+                        <div class="chart-masculino" style="width: <%= masculinoPercent %>%"></div>
+                        <div class="chart-femenino" style="width: <%= femeninoPercent %>%"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-3">
+                        <span><i class="bi bi-square-fill text-primary"></i> Masculino: <%= masculinoPercent.toFixed(1) %>%</span>
+                        <span><i class="bi bi-square-fill text-danger"></i> Femenino: <%= femeninoPercent.toFixed(1) %>%</span>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value"><%= total %></div>
+                            <div class="stat-label">Total de Estudiantes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value"><%= masculinos %></div>
+                            <div class="stat-label">Estudiantes Masculinos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value"><%= femeninos %></div>
+                            <div class="stat-label">Estudiantes Femeninos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value"><%= masculinos > 0 ? (femeninos / masculinos).toFixed(2) : 'N/A' %></div>
+                            <div class="stat-label">Proporción Femenino/Masculino</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-muted">
+                            <i class="bi bi-info-circle"></i> 
+                            Última actualización: <%= new Date().toLocaleDateString('es-ES', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            }) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script>
+        // Script para manejar el sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                content.classList.toggle('sidebar-active');
+                
+                // Si el sidebar está activo en móviles, ajustar el contenido
+                if (window.innerWidth <= 768) {
+                    if (sidebar.classList.contains('active')) {
+                        content.style.marginLeft = '250px';
+                    } else {
+                        content.style.marginLeft = '0';
+                    }
+                }
+            });
+            
+            // Ajustar en redimensionamiento de pantalla
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    content.style.marginLeft = '250px';
+                } else {
+                    if (!sidebar.classList.contains('active')) {
+                        content.style.marginLeft = '0';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
