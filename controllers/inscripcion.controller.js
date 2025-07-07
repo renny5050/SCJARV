@@ -114,7 +114,7 @@ const obtenerInscripcionCompleta = async (cedulaEscolar) => {
             emer_nacionalidad: personaEmergencia.nacionalidad,
 
             // ... resto de campos de emergencia
-            nombre_secci: seccionData.nombre_secci,
+            nombre_secci: seccionData.nombre_secci ? seccionData.nombre_secci : "No asignada",
             // Datos complementarios
             ...ambienteSocio,
             ...antecedentesPren,

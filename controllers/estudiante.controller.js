@@ -78,19 +78,23 @@ exports.detallesRepresentante = async (req, res) => {
         }
         
         const tutor = await Tutor.obtenerRepresentante(student.codigo_repre);
+        console.log('Tutor encontrado:', tutor);
         if (!tutor) {
             return res.status(404).send('Representante no encontrado para este estudiante');
         }
 
         const tutorData = await Person.obtenerPersona(tutor.codigo_perso);
-        const cleanTutor = { codigo_perso, ...tutor };
+        console.log('Datos del tutor:', tutorData);
+        const cleanTutor = tutorData;
         
         const formattedRep = {
             ...cleanTutor,
-            ...tutorData,
+            ...tutor,
             fecha_nacimiento_formatted: new Date(tutorData.fech_nacimie).toLocaleDateString()
         };
         
+        console.log('Representante formateado:', formattedRep);
+
         res.render('page-info-representante', {
             title: `Representante de ${student.primer_nombr} ${student.primer_apell}`,
             student: student,
@@ -118,7 +122,7 @@ exports.detallesMadre = async (req, res) => {
         }
 
         const motherData = await Person.obtenerPersona(mother.codigo_perso);
-        const cleanMother = { codigo_perso, ...mother };
+        const cleanMother = motherData;
         
         const formattedMot = {
             ...cleanMother,
@@ -153,7 +157,7 @@ exports.detallesPadre = async (req, res) => {
         }
 
         const fatherData = await Person.obtenerPersona(father.codigo_perso);
-        const cleanFather = { codigo_perso, ...father };
+        const cleanFather = fatherData;
         
         const formattedMot = {
             ...cleanFather,
@@ -188,7 +192,7 @@ exports.detallesEmergencia = async (req, res) => {
         }
 
         const emergenData = await Person.obtenerPersona(emergen.codigo_perso);
-        const cleanEmergen = { codigo_perso, ...emergen };
+        const cleanEmergen = emergenData;
         
         const formattedMot = {
             ...cleanEmergen,
