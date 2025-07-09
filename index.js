@@ -21,6 +21,7 @@ app.use(express.json());
 
 //RUTAS PARA EL SIDEBAR
 
+
 app.get('/datos', estudiante.contarEstudiantesPorGenero);
 
 app.get('/', (req, res) => {
@@ -100,6 +101,12 @@ app.post('/colaboraciones', colaboracion.crearColaboracion);
 app.post('/colaboraciones/:id', colaboracion.eliminarColaboracion);
 
 
+app.get('*', (req, res) => {
+    res.render('page-404', {
+        title: 'Página no encontrada',
+        message: 'Lo sentimos, la página que buscas no existe.'
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server ejecutándose en: http://localhost:${port}/`);

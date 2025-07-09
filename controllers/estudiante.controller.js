@@ -1,3 +1,5 @@
+const erorManager = require('../js/errorManager.js');
+
 const Student = require('../models/estudiante.model.js');
 const Tutor = require('../models/representante.model.js');
 const Person = require('../models/persona.model.js');
@@ -11,7 +13,6 @@ const EstudianSeccion = require('../models/studentsection.model.js');
 const Seccion = require('../models/section.model.js');
 const AnioSeccion = require('../models/anioSeccion.model.js');
 
-
 exports.cargarEstudiantes = async (req, res) => {
     try {
         const data = await Student.obtenerTodosEstudiantes();
@@ -24,8 +25,7 @@ exports.cargarEstudiantes = async (req, res) => {
             students: data
         });
     } catch (error) {
-        console.error('Error al procesar:', error);
-        res.status(500).send('Error interno del servidor');
+        erorManager.handle(error, res, 'Error al cargar estudiantes', 500);
     }
 };
 
@@ -33,31 +33,26 @@ exports.detallesEstudiante = async (req, res) => {
     try {
         const studentId = req.params.id;
         const studentSection = await EstudianSeccion.obtenerUltimaInscripcionPorEstudiante(studentId);
-        console.log('Ultima inscripción del estudiante:', studentSection);
         let seccionData;
+        
         if (!studentSection || !studentSection.cod_anoSecci) {
-            console.log('El estudiante no está inscrito en ninguna sección');
             seccionData = { codigo_secci: null, nombre_secci: 'No inscrito en ninguna sección' };
         } else {
-            console.log('Código de sección del estudiante:', studentSection.cod_anoSecci);
             seccionData = await AnioSeccion.obtenerAnoSeccion(studentSection.cod_anoSecci);
         }
         
-        console.log('ID del estudiante:', studentId);
-        console.log('Sección del estudiante:', seccionData);
         let cursante;
-        
         if (!studentSection) {
             cursante = { nombre_secci: 'No inscrito en ninguna sección' };
         } else {
             cursante = await Seccion.obtenerSeccion(seccionData.codigo_secci);
         }
-        
-        console.log('Cursante:', cursante);
 
         const student = await Student.obtenerEstudiante(studentId);
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
 
         student.tip_sangrees = student.tip_sangrees ? "+" : "-";
@@ -71,8 +66,7 @@ exports.detallesEstudiante = async (req, res) => {
             cursante: cursante && cursante.nombre_secci ? cursante.nombre_secci : 'No inscrito en ninguna sección'
         });
     } catch (error) {
-        console.error('Error al obtener estudiante:', error);
-        res.status(500).send('Error al cargar detalles del estudiante');
+        erorManager.handle(error, res, 'Error al cargar detalles del estudiante', error.status || 500);
     }
 };
 
@@ -82,26 +76,24 @@ exports.detallesRepresentante = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const tutor = await Tutor.obtenerRepresentante(student.codigo_repre);
-        console.log('Tutor encontrado:', tutor);
         if (!tutor) {
-            return res.status(404).send('Representante no encontrado para este estudiante');
+            const error = new Error('Representante no encontrado para este estudiante');
+            error.status = 404;
+            throw error;
         }
 
         const tutorData = await Person.obtenerPersona(tutor.codigo_perso);
-        console.log('Datos del tutor:', tutorData);
-        const cleanTutor = tutorData;
-        
         const formattedRep = {
-            ...cleanTutor,
+            ...tutorData,
             ...tutor,
             fecha_nacimiento_formatted: new Date(tutorData.fech_nacimie).toLocaleDateString()
         };
-        
-        console.log('Representante formateado:', formattedRep);
 
         res.render('page-info-representante', {
             title: `Representante de ${student.primer_nombr} ${student.primer_apell}`,
@@ -110,8 +102,7 @@ exports.detallesRepresentante = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener representante:', error);
-        res.status(500).send('Error al cargar detalles del representante');
+        erorManager.handle(error, res, 'Error al cargar detalles del representante', error.status || 500);
     }
 };
 
@@ -121,21 +112,22 @@ exports.detallesMadre = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const mother = await Mother.obtenerMadreNino(student.codigo_repre);
         if (!mother) {
-            return res.status(404).send('Madre no encontrada para este estudiante');
+            const error = new Error('Madre no encontrada para este estudiante');
+            error.status = 404;
+            throw error;
         }
 
         const motherData = await Person.obtenerPersona(mother.codigo_perso);
-        console.log('Datos de la madre:', motherData);
-        const cleanMother = motherData;
-        
         const formattedMot = {
-            ...cleanMother,
             ...motherData,
+            ...mother,
             fecha_nacimiento_formatted: new Date(motherData.fech_nacimie).toLocaleDateString()
         };
         
@@ -146,8 +138,7 @@ exports.detallesMadre = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener madre:', error);
-        res.status(500).send('Error al cargar detalles de la madre');
+        erorManager.handle(error, res, 'Error al cargar detalles de la madre', error.status || 500);
     }
 };
 
@@ -157,20 +148,22 @@ exports.detallesPadre = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const father = await Father.obtenerPadreNino(student.codigo_repre);
         if (!father) {
-            return res.status(404).send('Padre no encontrado para este estudiante');
+            const error = new Error('Padre no encontrado para este estudiante');
+            error.status = 404;
+            throw error;
         }
 
         const fatherData = await Person.obtenerPersona(father.codigo_perso);
-        const cleanFather = fatherData;
-        
         const formattedMot = {
-            ...cleanFather,
             ...fatherData,
+            ...father,
             fecha_nacimiento_formatted: new Date(fatherData.fech_nacimie).toLocaleDateString()
         };
         
@@ -181,8 +174,7 @@ exports.detallesPadre = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener padre:', error);
-        res.status(500).send('Error al cargar detalles del padre');
+        erorManager.handle(error, res, 'Error al cargar detalles del padre', error.status || 500);
     }
 };
 
@@ -192,20 +184,22 @@ exports.detallesEmergencia = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const emergen = await Emergen.obtenerContactoEmergencia(student.codigo_repre);
         if (!emergen) {
-            return res.status(404).send('Contacto de emergencia no encontrado');
+            const error = new Error('Contacto de emergencia no encontrado');
+            error.status = 404;
+            throw error;
         }
 
         const emergenData = await Person.obtenerPersona(emergen.codigo_perso);
-        const cleanEmergen = emergenData;
-        
         const formattedMot = {
-            ...cleanEmergen,
             ...emergenData,
+            ...emergen,
             fecha_nacimiento_formatted: new Date(emergenData.fech_nacimie).toLocaleDateString()
         };
         
@@ -216,8 +210,7 @@ exports.detallesEmergencia = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener contacto de emergencia:', error);
-        res.status(500).send('Error al cargar contacto de emergencia');
+        erorManager.handle(error, res, 'Error al cargar contacto de emergencia', error.status || 500);
     }
 };
 
@@ -227,12 +220,16 @@ exports.detallesSocioFamiliar = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const socfam = await SocFam.obtenerAmSocFam(student.codigo_repre);
         if (!socfam) {
-            return res.status(404).send('Ambiente sociofamiliar no encontrado');
+            const error = new Error('Ambiente sociofamiliar no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         res.render('page-info-sociofam', {
@@ -242,8 +239,7 @@ exports.detallesSocioFamiliar = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener ambiente sociofamiliar:', error);
-        res.status(500).send('Error al cargar ambiente sociofamiliar');
+        erorManager.handle(error, res, 'Error al cargar ambiente sociofamiliar', error.status || 500);
     }
 };
 
@@ -253,12 +249,16 @@ exports.detallesProblemasNacimiento = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const probnac = await ProbNac.obtenerProblNac(student.codigo_repre);
         if (!probnac) {
-            return res.status(404).send('Problemas de nacimiento no encontrados');
+            const error = new Error('Problemas de nacimiento no encontrados');
+            error.status = 404;
+            throw error;
         }
         
         res.render('page-problem-nac', {
@@ -268,8 +268,7 @@ exports.detallesProblemasNacimiento = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener problemas de nacimiento:', error);
-        res.status(500).send('Error al cargar problemas de nacimiento');
+        erorManager.handle(error, res, 'Error al cargar problemas de nacimiento', error.status || 500);
     }
 };
 
@@ -279,12 +278,16 @@ exports.detallesAntecedentesPrenatales = async (req, res) => {
         const student = await Student.obtenerEstudiante(studentId);
         
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
         const antepre = await AntePren.obtenerAntePren(student.codigo_repre);
         if (!antepre) {
-            return res.status(404).send('Antecedentes prenatales no encontrados');
+            const error = new Error('Antecedentes prenatales no encontrados');
+            error.status = 404;
+            throw error;
         }
         
         res.render('page-antecedentes', {
@@ -294,8 +297,7 @@ exports.detallesAntecedentesPrenatales = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error al obtener antecedentes prenatales:', error);
-        res.status(500).send('Error al cargar antecedentes prenatales');
+        erorManager.handle(error, res, 'Error al cargar antecedentes prenatales', error.status || 500);
     }
 };
 
@@ -303,12 +305,16 @@ exports.buscarEstudiantePorCedula = async (req, res) => {
     try {
         const cedula = req.query.cedulaEscolar;
         if (!cedula) {
-            return res.status(400).send('Debe proporcionar una cédula para la búsqueda');
+            const error = new Error('Debe proporcionar una cédula para la búsqueda');
+            error.status = 400;
+            throw error;
         }
 
         const student = await Student.obtenerEstudianteCedula(cedula);
         if (!student) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
 
         student.tip_sangrees = student.tip_sangrees ? "+" : "-";
@@ -321,8 +327,7 @@ exports.buscarEstudiantePorCedula = async (req, res) => {
             students: [student]
         });
     } catch (error) {
-        console.error('Error al buscar estudiante por cédula:', error);
-        res.status(500).send('Error interno del servidor');
+        erorManager.handle(error, res, 'Error al buscar estudiante por cédula', error.status || 500);
     }
 };
 
@@ -346,7 +351,6 @@ exports.contarEstudiantesPorGenero = async (req, res) => {
             femeninos
         });
     } catch (error) {
-        console.error('Error al contar estudiantes por género:', error);
-        res.status(500).send('Error interno del servidor');
+        erorManager.handle(error, res, 'Error al contar estudiantes por género', 500);
     }
 };

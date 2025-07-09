@@ -1,23 +1,36 @@
-// inscripcionController.js
+const erorManager = require('../js/errorManager.js');
 const studentModel = require('../models/estudiante.model.js');
-const sectionYearModel = require('../models/anioSeccion.model.js');
-const studentSectionModel = require('../models/studentsection.model.js');
 const anioSeccionModel = require('../models/anioSeccion.model.js');
-const Persona = require('../models/persona.model.js'); // Asegúrate de importar el modelo de personas
-
-
+const studentSectionModel = require('../models/studentsection.model.js');
+const Persona = require('../models/persona.model.js');
 
 exports.mostrarInscripciones = async (req, res) => {
-    const cod_anoSecci = req.params.id; 
-    console.log('Código de Año-Sección:', cod_anoSecci);
-    
     try {
-        const estudiantes = await studentSectionModel.obtenerInscripcionesPorAnoSeccion(cod_anoSecci);  
-        const dataSeccion = await anioSeccionModel.obtenerAnoSeccion(cod_anoSecci);
-        const docentePrincipal = await Persona.obtenerPersona(dataSeccion.docente_prin);
-        const docenteSecundario = await Persona.obtenerPersona(dataSeccion.docente_secu);   
+        const cod_anoSecci = req.params.id;
+        
+        // Validar ID de año-sección
+        if (!cod_anoSecci || isNaN(cod_anoSecci)) {
+            const error = new Error('ID de año-sección inválido');
+            error.status = 400;
+            throw error;
+        }
 
-        // Formatear datos importantes
+        // Obtener estudiantes inscritos
+        const estudiantes = await studentSectionModel.obtenerInscripcionesPorAnoSeccion(cod_anoSecci);
+        
+        // Obtener información de la sección
+        const dataSeccion = await anioSeccionModel.obtenerAnoSeccion(cod_anoSecci);
+        if (!dataSeccion) {
+            const error = new Error('Sección no encontrada');
+            error.status = 404;
+            throw error;
+        }
+        
+        // Obtener docentes
+        const docentePrincipal = await Persona.obtenerPersona(dataSeccion.docente_prin);
+        const docenteSecundario = await Persona.obtenerPersona(dataSeccion.docente_secu);
+
+        // Formatear datos de estudiantes
         const estudiantesFormateados = estudiantes.map(est => ({
             ...est,
             nombreCompleto: `${est.primer_nombr} ${est.segundo_nomb || ''} ${est.primer_apell} ${est.segundo_apellido || ''}`,
@@ -26,152 +39,121 @@ exports.mostrarInscripciones = async (req, res) => {
             tieneTipoSangre: est.tip_sangrees === 1 ? 'Sí' : 'No'
         }));
 
-        
-
         res.render('page-cursantes', {
             title: 'Estudiantes Inscritos',
             estudiantes: estudiantesFormateados,
             cod_anoSecci: cod_anoSecci,
             docente_prin: docentePrincipal,
-            docente_secu: docenteSecundario,
-
+            docente_secu: docenteSecundario
         });
         
     } catch (error) {
-        console.error('Error al mostrar inscripciones:', error);
-        res.status(500).send('Error interno del servidor');
+        erorManager.handle(error, res, 'Error al mostrar inscripciones', error.status || 500);
     }
 };
 
-
-exports.inscribirEstudiante = async (req, res) => {console.log('INSCRIPCION DE ESTUDIANTE');
-    const cod_anoSecci = req.params.id;
-    const  cedu_escolar  = req.body.cedu_escolar;
-    console.log('INSCRIPCION DE ESTUDIANTE');
-    console.log('Cedula Escolar recibida:', cedu_escolar);
-    console.log('Código de Año-Sección:', cod_anoSecci);
-
-    
+const inscribirEstudianteInterno = async (cod_anoSecci, cedu_escolar, res) => {
     try {
-        const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
-        const codigo_estud = estudiante ? estudiante.codigo_estud : null;
+        // Validar parámetros
+        if (!cod_anoSecci || !cedu_escolar) {
+            const error = new Error('Parámetros requeridos faltantes');
+            error.status = 400;
+            throw error;
+        }
 
+        // Buscar estudiante
+        const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
         if (!estudiante) {
-            return res.status(404).send('Estudiante no encontrado');
+            const error = new Error('Estudiante no encontrado');
+            error.status = 404;
+            throw error;
         }
         
-        const existeInscripcion = await studentSectionModel.existeInscripcion(cod_anoSecci, codigo_estud);
-
+        // Verificar si ya está inscrito
+        const existeInscripcion = await studentSectionModel.existeInscripcion(cod_anoSecci, estudiante.codigo_estud);
         if (existeInscripcion) {
-            return res.status(400).send('El estudiante ya está inscrito en esta sección');
+            const error = new Error('El estudiante ya está inscrito en esta sección');
+            error.status = 400;
+            throw error;
         }
 
+        // Crear inscripción
         const inscripcion = await studentSectionModel.crearInscripcion({
             cod_anoSecci: cod_anoSecci,
-            codigo_estud: codigo_estud
+            codigo_estud: estudiante.codigo_estud
         });
 
-        
         if (!inscripcion) {
-            return res.status(500).send('Error al inscribir al estudiante');
+            const error = new Error('Error al inscribir al estudiante');
+            error.status = 500;
+            throw error;
         }
 
-        res.redirect('/cursantes/' + cod_anoSecci);
-
+        return inscripcion;
     } catch (error) {
-        console.error('Error al inscribir estudiante:', error);
-        res.redirect('back');
+        throw error;
     }
 };
 
-exports.inscribirEstudianteEnlace = async (req, res) => {console.log('INSCRIPCION DE ESTUDIANTE');
-    const cod_anoSecci = req.params.id;
-    const  cedu_escolar  = req.params.cedulaEscolar;
-    console.log('INSCRIPCION DE ESTUDIANTE');
-    console.log('Cedula Escolar recibida:', cedu_escolar);
-    console.log('Código de Año-Sección:', cod_anoSecci);
-
-    
+exports.inscribirEstudiante = async (req, res) => {
     try {
-        const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
-        const codigo_estud = estudiante ? estudiante.codigo_estud : null;
-
-        if (!estudiante) {
-            return res.status(404).send('Estudiante no encontrado');
-        }
+        const cod_anoSecci = req.params.id;
+        const cedu_escolar = req.body.cedu_escolar;
         
-        const existeInscripcion = await studentSectionModel.existeInscripcion(cod_anoSecci, codigo_estud);
-
-        if (existeInscripcion) {
-            return res.status(400).send('El estudiante ya está inscrito en esta sección');
-        }
-
-        const inscripcion = await studentSectionModel.crearInscripcion({
-            cod_anoSecci: cod_anoSecci,
-            codigo_estud: codigo_estud
-        });
-
-        
-        if (!inscripcion) {
-            return res.status(500).send('Error al inscribir al estudiante');
-        }
-
+        await inscribirEstudianteInterno(cod_anoSecci, cedu_escolar, res);
         res.redirect('/cursantes/' + cod_anoSecci);
-
     } catch (error) {
-        console.error('Error al inscribir estudiante:', error);
-        res.redirect('back');
+        erorManager.handle(error, res, 'Error al inscribir estudiante', error.status || 500);
+    }
+};
+
+exports.inscribirEstudianteEnlace = async (req, res) => {
+    try {
+        const cod_anoSecci = req.params.id;
+        const cedu_escolar = req.params.cedulaEscolar;
+        
+        await inscribirEstudianteInterno(cod_anoSecci, cedu_escolar, res);
+        res.redirect('/cursantes/' + cod_anoSecci);
+    } catch (error) {
+        erorManager.handle(error, res, 'Error al inscribir estudiante', error.status || 500);
     }
 };
 
 exports.inscribirEstudianteRedireccion = async (req, res) => {
-    
-    const cod_anoSecci = req.body.cod_anoSecci; 
-    const cedu_escolar = req.body.cedu_escolar;
-
-    console.log('Cedula Escolar recibida:', cedu_escolar);
-    
     try {
-        const estudiante = await studentModel.obtenerEstudianteCedula(cedu_escolar);
-        const codigo_estud = estudiante ? estudiante.codigo_estud : null;
-
-        if (!estudiante) {
-            return res.status(404).send('Estudiante no encontrado');
-        }
+        const cod_anoSecci = req.body.cod_anoSecci;
+        const cedu_escolar = req.body.cedu_escolar;
         
-        const existeInscripcion = await studentSectionModel.existeInscripcion(cod_anoSecci, codigo_estud);
-
-        if (existeInscripcion) {
-            return res.status(400).send('El estudiante ya está inscrito en esta sección');
-        }
-
-        const inscripcion = await studentSectionModel.crearInscripcion({
-            cod_anoSecci: cod_anoSecci,
-            codigo_estud: codigo_estud
-        });
-
-        
-        if (!inscripcion) {
-            return res.status(500).send('Error al inscribir al estudiante');
-        }
-
+        await inscribirEstudianteInterno(cod_anoSecci, cedu_escolar, res);
         res.redirect('/cursantes/' + cod_anoSecci);
-
     } catch (error) {
-        console.error('Error al inscribir estudiante:', error);
-        res.redirect('back');
+        erorManager.handle(error, res, 'Error al inscribir estudiante', error.status || 500);
     }
 };
 
 exports.eliminarInscripcion = async (req, res) => {
-    const cod_inscripc = req.params.id;
-    
     try {
-        await studentModel.eliminarInscripcion(cod_inscripc);
+        const cod_inscripc = req.params.id;
+        
+        // Validar ID de inscripción
+        if (!cod_inscripc || isNaN(cod_inscripc)) {
+            const error = new Error('ID de inscripción inválido');
+            error.status = 400;
+            throw error;
+        }
+
+        // Verificar si existe la inscripción
+        const inscripcion = await studentSectionModel.obtenerInscripcion(cod_inscripc);
+        if (!inscripcion) {
+            const error = new Error('Inscripción no encontrada');
+            error.status = 404;
+            throw error;
+        }
+
+        // Eliminar inscripción
+        await studentSectionModel.eliminarInscripcion(cod_inscripc);
         res.redirect('back');
     } catch (error) {
-        console.error('Error al eliminar inscripción:', error);
-        res.redirect('back');
+        erorManager.handle(error, res, 'Error al eliminar inscripción', error.status || 500);
     }
 };
-

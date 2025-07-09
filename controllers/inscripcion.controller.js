@@ -1,3 +1,5 @@
+const erorManager = require('../js/errorManager.js');
+
 const Estudiante = require('../models/estudiante.model.js');
 const Persona = require('../models/persona.model.js');
 const Repre = require('../models/representante.model.js');
@@ -130,8 +132,8 @@ const obtenerInscripcionCompleta = async (cedulaEscolar) => {
         };
         
     } catch (error) {
-        console.error('Error interno al obtener datos completos:', error);
-        throw error; // Relanza el error para manejo superior
+        erorManager.handle(error, null, 'Error interno al obtener datos completos');
+        throw error;
     }
 };
 
@@ -418,8 +420,7 @@ doc.end();
         
 
     } catch (error) {
-        console.error('Error al generar PDF:', error);
-        res.status(500).send('Error al generar el documento PDF');
+        erorManager.handle(error, res, 'Error al generar PDF');
     }
 };
 
@@ -725,12 +726,9 @@ exports.subirInscripcion = async (req, res) => {
     
     res.redirect('/inscripcionexitosa/' + dataEstud.cedu_escolar);
   } catch (error) {
-    console.error('Error al procesar la inscripción:', error);
-    res.status(500).send('Error interno del servidor: ' + error.message);
+    erorManager.handle(error, res, 'Error al procesar la inscripción');
   }
 };
-
-// ... (código posterior sin cambios)
 
 exports.inscripcionExitosa = (req, res) => {
     const cedulaEscolar = req.params.cedulaEscolar;

@@ -258,7 +258,316 @@
             sidebar.classList.toggle('visible');
             content.classList.toggle('content-expanded');
         });
+
+        
     });
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuración inicial de fechas
+    const today = new Date();
+    const minDateStudent = new Date(today.getFullYear() - 6, today.getMonth(), today.getDate());
+    const maxDateStudent = new Date(today.getFullYear() - 3, today.getMonth(), today.getDate());
+    const maxDateAdult = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    
+    // Establecer límites para fecha de nacimiento del estudiante
+    const fechaNacInput = document.getElementById('fecha_nacimiento');
+    if (fechaNacInput) {
+        fechaNacInput.min = minDateStudent.toISOString().split('T')[0];
+        fechaNacInput.max = maxDateStudent.toISOString().split('T')[0];
+        
+        // Actualizar texto de ayuda
+        const helpText = fechaNacInput.nextElementSibling;
+        if (helpText && helpText.classList.contains('text-muted')) {
+            helpText.textContent = 'Debe tener entre 3 y 6 años';
+        }
+    }
+    
+    // Configurar fechas para adultos
+    const repFechaInput = document.getElementById('rep_fecha_nacimiento');
+    const madreFechaInput = document.getElementById('madre_fecha_nacimiento');
+    const padreFechaInput = document.getElementById('padre_fecha_nacimiento');
+    
+    if (repFechaInput) repFechaInput.max = maxDateAdult.toISOString().split('T')[0];
+    if (madreFechaInput) madreFechaInput.max = maxDateAdult.toISOString().split('T')[0];
+    if (padreFechaInput) padreFechaInput.max = maxDateAdult.toISOString().split('T')[0];
+    
+    // Fecha de inscripción automática
+    const fechaInscripcionInput = document.getElementById('fecha_inscripcion');
+    const fechaInscripcionText = document.getElementById('fecha-inscripcion-text');
+    if (fechaInscripcionInput && fechaInscripcionText) {
+        const formattedToday = today.toISOString().split('T')[0];
+        fechaInscripcionInput.value = formattedToday;
+        fechaInscripcionText.textContent = formattedToday;
+    }
+    
+    // Función para sanitizar inputs
+    const sanitizeInput = (value) => {
+        return value.replace(/<[^>]*>/g, '').trim();
+    };
+    
+    // Validadores específicos
+    const validators = {
+        soloLetras: (value) => /^[A-Za-záéíóúñÁÉÍÓÚÑ\s]{2,50}$/.test(value),
+        cedula: (value) => /^\d{6,8}$/.test(value),
+        telefono: (value) => /^(\+58|0)\d{3}-\d{7}$/.test(value),
+        email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        pesoActual: (value) => !value || (value >= 10 && value <= 30),
+        tallaActual: (value) => !value || (value >= 50 && value <= 130),
+        pesoNacimiento: (value) => !value || (value >= 500 && value <= 6000),
+        tallaNacimiento: (value) => !value || (value >= 30 && value <= 60),
+        edadMadreParto: (value) => !value || (value >= 10 && value <= 60),
+        edadHablar: (value) => !value || (value >= 0 && value <= 60),
+        edadCaminar: (value) => !value || (value >= 0 && value <= 24),
+        edadEmergencia: (value) => value >= 18
+    };
+    
+    // Configuración de validación por campo
+    const fieldValidations = {
+        // ===== DATOS DEL ESTUDIANTE =====
+        'primer_nombr': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'segundo_nomb': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'primer_apell': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'segundo_apellido': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'peso_kg': { validator: validators.pesoActual, msg: 'Entre 10-30 kg' },
+        'tall_cm': { validator: validators.tallaActual, msg: 'Entre 50-130 cm' },
+        
+        // ===== REPRESENTANTE LEGAL =====
+        'rep_primer_nombr': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'rep_segundo_nomb': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'rep_primer_apell': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'rep_segund_apell': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'rep_cedula': { validator: validators.cedula, msg: 'Formato 1234567' },
+        'rep_telefono': { validator: validators.telefono, msg: 'Formato 0412-1234567' },
+        'rep_email': { validator: validators.email, msg: 'Email inválido' },
+        
+        // ===== DATOS DE LA MADRE =====
+        'madre_primer_nombr': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'madre_segundo_nomb': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'madre_primer_apell': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'madre_segundo_apell': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'madre_cedula': { validator: value => !value || validators.cedula(value), msg: 'Formato 1234567' },
+        'madre_telefono': { validator: value => !value || validators.telefono(value), msg: 'Formato 0412-1234567' },
+        'madre_correo': { validator: value => !value || validators.email(value), msg: 'Email inválido' },
+        
+        // ===== DATOS DEL PADRE =====
+        'padre_primer_nombr': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'padre_segundo_nomb': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'padre_primer_apell': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'padre_segundo_apell': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'padre_cedula': { validator: value => !value || validators.cedula(value), msg: 'Formato 1234567' },
+        'padre_telefono': { validator: value => !value || validators.telefono(value), msg: 'Formato 0412-1234567' },
+        'padre_correo': { validator: value => !value || validators.email(value), msg: 'Email inválido' },
+        
+        // ===== CONTACTO DE EMERGENCIA =====
+        'emer_primer_nombre': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'emer_segundo_nombre': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'emer_primer_apellido': { validator: validators.soloLetras, msg: 'Solo letras (2-50 caracteres)' },
+        'emer_segundo_apellido': { validator: value => !value || validators.soloLetras(value), msg: 'Solo letras (2-50 caracteres)' },
+        'emer_cedula': { validator: validators.cedula, msg: 'Formato 1234567' },
+        'emer_telefono': { validator: validators.telefono, msg: 'Formato 0412-1234567' },
+        'emer_edad': { validator: validators.edadEmergencia, msg: 'Mínimo 18 años' },
+        
+        // ===== ANTECEDENTES PRENATALES =====
+        'edad_madre_parto': { validator: validators.edadMadreParto, msg: 'Entre 10-60 años' },
+        'peso_nino': { validator: validators.pesoNacimiento, msg: 'Entre 500-6000 g' },
+        'talla_nino': { validator: validators.tallaNacimiento, msg: 'Entre 30-60 cm' },
+        'edad_hablar': { validator: validators.edadHablar, msg: '0-60 meses' },
+        'edad_caminar': { validator: validators.edadCaminar, msg: '0-24 meses' }
+    };
+    
+    // Crear elementos de feedback si no existen
+    document.querySelectorAll('input, select').forEach(field => {
+        if (!field.name) return;
+        
+        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('invalid-feedback')) {
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            field.parentNode.appendChild(feedback);
+        }
+    });
+    
+    // Validación de campo individual
+    function validateField(field) {
+        const validation = fieldValidations[field.name];
+        if (!validation) return true;
+        
+        let value;
+        if (field.type === 'number') {
+            value = field.value === '' ? null : parseFloat(field.value);
+        } else {
+            value = sanitizeInput(field.value);
+        }
+        
+        // Si el campo no es requerido y está vacío, se considera válido
+        if ((value === null || value === '') && !field.required) {
+            field.classList.remove('is-invalid');
+            field.classList.remove('is-valid');
+            if (field.nextElementSibling) {
+                field.nextElementSibling.textContent = '';
+            }
+            return true;
+        }
+        
+        const isValid = validation.validator(value);
+        if (!isValid) {
+            field.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            if (field.nextElementSibling) {
+                field.nextElementSibling.textContent = validation.msg;
+            }
+            return false;
+        } else {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+            if (field.nextElementSibling) {
+                field.nextElementSibling.textContent = '';
+            }
+            return true;
+        }
+    }
+    
+    // Validación de fechas
+    function validateDates() {
+        let valid = true;
+        const dateFields = [
+            {id: 'fecha_nacimiento', minAge: 3, maxAge: 6},
+            {id: 'rep_fecha_nacimiento', minAge: 18},
+            {id: 'madre_fecha_nacimiento', minAge: 18},
+            {id: 'padre_fecha_nacimiento', minAge: 18}
+        ];
+        
+        dateFields.forEach(dateField => {
+            const field = document.getElementsByName(dateField.id)[0];
+            if (!field || !field.value) return;
+            
+            const birthDate = new Date(field.value);
+            const today = new Date();
+            let minDate = new Date(today.getFullYear() - dateField.minAge, today.getMonth(), today.getDate());
+            let maxDate = null;
+            
+            if (dateField.maxAge) {
+                maxDate = new Date(today.getFullYear() - dateField.maxAge, today.getMonth(), today.getDate());
+            }
+            
+            let errorMessage = '';
+            if (dateField.maxAge) {
+                // Validar rango de edad (3-6 años)
+                if (birthDate < maxDate || birthDate > minDate) {
+                    errorMessage = `Debe tener entre ${dateField.minAge} y ${dateField.maxAge} años`;
+                }
+            } else {
+                // Validar solo edad mínima
+                if (birthDate > minDate) {
+                    errorMessage = `Mínimo ${dateField.minAge} años`;
+                }
+            }
+            
+            if (errorMessage) {
+                field.classList.add('is-invalid');
+                if (field.nextElementSibling) {
+                    field.nextElementSibling.textContent = errorMessage;
+                }
+                valid = false;
+            } else {
+                field.classList.remove('is-invalid');
+                field.classList.add('is-valid');
+            }
+        });
+        
+        return valid;
+    }
+    
+    // Validación de nombres en mayúsculas
+    function formatNames() {
+        document.querySelectorAll('input[name*="nombr"], input[name*="apell"]').forEach(field => {
+            if (field.value) {
+                field.value = sanitizeInput(field.value)
+                    .toLowerCase()
+                    .replace(/\b\w/g, c => c.toUpperCase());
+            }
+        });
+    }
+    
+    // Validación completa del formulario
+    function validateForm() {
+        let isValid = true;
+        
+        // Validar todos los campos
+        document.querySelectorAll('input, select').forEach(field => {
+            if (field.name && !validateField(field)) {
+                isValid = false;
+            }
+        });
+        
+        // Validar fechas
+        if (!validateDates()) {
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+    
+    // Eventos de validación en tiempo real
+    document.querySelectorAll('input, select').forEach(field => {
+        if (!field.name) return;
+        
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        // Validar números mientras se escriben
+        if (field.type === 'number') {
+            field.addEventListener('input', function() {
+                validateField(this);
+            });
+        }
+        
+        // Validar nombres mientras se escriben
+        if (field.name.includes('nombr') || field.name.includes('apell')) {
+            field.addEventListener('input', function() {
+                validateField(this);
+            });
+        }
+    });
+    
+    // Validar al enviar el formulario
+    const form = document.getElementById('inscriptionForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Formatear nombres
+            formatNames();
+            
+            // Validar formulario
+            if (!validateForm()) {
+                e.preventDefault();
+                
+                // Encontrar el primer campo inválido y desplazarse a él
+                const firstInvalid = document.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    
+                    // Enfocar el campo
+                    setTimeout(() => {
+                        firstInvalid.focus();
+                    }, 1000);
+                }
+            }
+        });
+    }
+    
+    // Validación inicial para campos que podrían tener valores por defecto
+    setTimeout(() => {
+        document.querySelectorAll('input, select').forEach(field => {
+            if (field.name && field.value) {
+                validateField(field);
+            }
+        });
+    }, 500);
+});
+</script>
 </body>
 </html>

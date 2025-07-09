@@ -1,3 +1,5 @@
+const erorManager = require('../js/errorManager.js');
+
 // representante.controller.js
 const Representante = require('../models/representante.model.js');
 const Persona = require('../models/persona.model.js');
@@ -23,11 +25,7 @@ exports.cargarRepresentantes = async (req, res) => {
             representantes: representantesConDatos
         });
     } catch (error) {
-        console.error('Error al procesar:', error);
-        res.status(500).render('error', {
-            message: 'Error interno del servidor',
-            error: error
-        });
+        erorManager.handle(error, res, 'Error al cargar representantes');
     }
 };
 
@@ -75,35 +73,36 @@ exports.detallesRepresentante = async (req, res) => {
             estudiantes: estudiantesFormateados
         });
     } catch (error) {
-        console.error('Error al obtener representante:', error);
-        res.status(500).render('error', {
-            message: 'Error al cargar detalles del representante',
-            error: error
-        });
+        erorManager.handle(error, res, 'Error al cargar detalles del representante');
     }
 };
 
 exports.buscarRepresentantePorCedula = async (req, res) => {
     try {
         const cedula = req.body.cedulaRepresentante;
-        console.log('Cédula del representante recibida:', cedula);
         if (!cedula) {
-            return res.status(400).send('Cédula del representante es requerida para la búsqueda');
+            return res.status(400).render('page-error', {
+                statusCode: 400,
+                errorTitle: 'Datos incompletos',
+                errorMessage: 'Cédula del representante es requerida para la búsqueda'
+            });
         }
 
         const persona = await Persona.obtenerPersonaPorCedula(cedula);
         if (!persona) {
-            return res.status(404).render('page-representantes', {
+            return res.render('page-representantes', {
                 title: 'Resultado de búsqueda',
-                representantes: []
+                representantes: [],
+                searchMessage: `No se encontró representante con cédula ${cedula}`
             });
         }
 
         const representante = await Representante.obtenerRepresentantePorPersona(persona.codigo_perso);
         if (!representante) {
-            return res.status(404).render('page-representantes', {
+            return res.render('page-representantes', {
                 title: 'Resultado de búsqueda',
-                representantes: []
+                representantes: [],
+                searchMessage: `La persona con cédula ${cedula} no está registrada como representante`
             });
         }
 
@@ -115,10 +114,10 @@ exports.buscarRepresentantePorCedula = async (req, res) => {
 
         res.render('page-representantes', {
             title: 'Resultado de búsqueda',
-            representantes: [representanteCompleto]
+            representantes: [representanteCompleto],
+            searchMessage: `Representante encontrado: ${persona.primer_nombr} ${persona.primer_apell}`
         });
     } catch (error) {
-        console.error('Error al buscar representante por cédula:', error);
-        res.status(500).send('Error interno del servidor al buscar representante');
+        erorManager.handle(error, res, 'Error al buscar representante por cédula');
     }
 };

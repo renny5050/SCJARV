@@ -1,3 +1,5 @@
+const erorManager = require('../js/errorManager.js');
+
 // seccionController.js
 const seccionModel = require('../models/section.model.js');
 
@@ -18,8 +20,7 @@ exports.listarSecciones = async (req, res) => {
             cedulaEscolar: cedulaEscolar
         });
     } catch (error) {
-        console.error('Error al listar secciones:', error);
-        res.redirect('/secciones');
+        erorManager.handle(error, res, 'Error al listar secciones');
     }
 };
 
@@ -27,18 +28,20 @@ exports.listarSecciones = async (req, res) => {
 exports.crearSeccion = async (req, res) => {
     const nombre_secci = req.body.nombre_secci
 
-    console.log('Nombre de sección recibido:', nombre_secci);
-    
     if (!nombre_secci) {
-        return res.redirect('/secciones');
+        return erorManager.handle(
+            new Error('El nombre de la sección es requerido'), 
+            res, 
+            'Datos incompletos', 
+            400
+        );
     }
     
     try {
         await seccionModel.crearSeccion(nombre_secci);
         res.redirect('/secciones');
     } catch (error) {
-        console.error('Error al crear sección:', error);
-        res.redirect('/secciones');
+        erorManager.handle(error, res, 'Error al crear sección');
     }
 };
 
@@ -48,27 +51,29 @@ exports.actualizarSeccion = async (req, res) => {
     const nombre_secci = req.body.nombre_secci ? req.body.nombre_secci.trim() : '';
     
     if (!nombre_secci) {
-        return res.redirect('/secciones');
+        return erorManager.handle(
+            new Error('El nombre de la sección es requerido'), 
+            res, 
+            'Datos incompletos', 
+            400
+        );
     }
     
     try {
         await seccionModel.actualizarSeccion(codigo_secci, { nombre_secci });
         res.redirect('/secciones');
     } catch (error) {
-        console.error('Error al actualizar sección:', error);
-        res.redirect('/secciones');
+        erorManager.handle(error, res, 'Error al actualizar sección');
     }
 };
 
 // Eliminar una sección
 exports.eliminarSeccion = async (req, res) => {
     const codigo_secci = req.params.id;
-    console.log('Código de sección a eliminar:', codigo_secci);
     try {
         await seccionModel.eliminarSeccion(codigo_secci);
         res.redirect('/secciones');
     } catch (error) {
-        console.error('Error al eliminar sección:', error);
-        res.redirect('/secciones');
+        erorManager.handle(error, res, 'Error al eliminar sección');
     }
 };
