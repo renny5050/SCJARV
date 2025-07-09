@@ -392,7 +392,7 @@
                                         <td><%= colab.monto_dPagoS ? parseFloat(colab.monto_dPagoS).toFixed(2) : '0.00' %> Bs.</td>
                                         <td>
                                             <div class="action-buttons">
-                                                <form action="/colaboraciones/<%= colab.cod_colabora %>?_method=DELETE" 
+                                                <form action="/colaboraciones/<%= colab.cod_colabora %>" 
                                                       method="POST" style="display:inline;">
                                                     <button type="submit" class="btn action-btn delete-btn">
                                                         <i class="fas fa-trash"></i> Eliminar

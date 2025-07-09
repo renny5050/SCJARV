@@ -37,11 +37,28 @@
 <div class="row mb-3">
   <div class="col-md-4">
     <label class="form-label">Edad (años)</label>
-    <input type="number" class="form-control" name="emer_edad" required>
+    <input type="number" class="form-control" name="emer_edad" min="0" required>
   </div>
   <div class="col-md-4">
     <label class="form-label">Parentesco</label>
-    <input type="text" class="form-control" name="emer_parentesco" required>
+    <select class="form-select" name="emer_parentesco" required>
+      <option value="">Seleccione una opción</option>
+      <option value="madre">Madre</option>
+      <option value="padre">Padre</option>
+      <option value="abuela">Abuela</option>
+      <option value="abuelo">Abuelo</option>
+      <option value="tia">Tía</option>
+      <option value="tio">Tío</option>
+      <option value="hermana">Hermana</option>
+      <option value="hermano">Hermano</option>
+      <option value="prima">Prima</option>
+      <option value="primo">Primo</option>
+      <option value="madrastra">Madrastra</option>
+      <option value="padrastro">Padrastro</option>
+      <option value="tutora">Tutora</option>
+      <option value="tutor">Tutor</option>
+      <option value="otro">Otro</option>
+    </select>
   </div>
   <div class="col-md-4">
     <label class="form-label">Ocupación</label>

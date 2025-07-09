@@ -23,7 +23,24 @@
   <div class="row mb-3">
     <div class="col-md-3">
       <label class="form-label">Parentesco</label>
-      <input type="text" class="form-control" name="parentesco_r" required>
+      <select class="form-select" name="parentesco_r" required>
+        <option value="">Seleccione una opción</option>
+        <option value="madre">Madre</option>
+        <option value="padre">Padre</option>
+        <option value="abuela">Abuela</option>
+        <option value="abuelo">Abuelo</option>
+        <option value="tia">Tía</option>
+        <option value="tio">Tío</option>
+        <option value="hermana">Hermana</option>
+        <option value="hermano">Hermano</option>
+        <option value="prima">Prima</option>
+        <option value="primo">Primo</option>
+        <option value="madrastra">Madrastra</option>
+        <option value="padrastro">Padrastro</option>
+        <option value="tutora">Tutora</option>
+        <option value="tutor">Tutor</option>
+        <option value="otro">Otro</option>
+      </select>
     </div>
     <div class="col-md-3">
       <label class="form-label">Cédula de Identidad</label>
@@ -57,7 +74,19 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <div class="col-md-12">
+        <label class="form-label">¿El representante legal es?</label>
+        <select class="form-select" id="representanteEs" name="representanteEs">
+            <option value="">Seleccione una opción</option>
+            <option value="madre">La madre del estudiante</option>
+            <option value="padre">El padre del estudiante</option>
+            <option value="otro">Otra persona</option>
+        </select>
+    </div>
+</div>
 
+<!--
 <script>
   // Calcular fecha máxima para el representante (18 años antes de hoy)
   document.addEventListener('DOMContentLoaded', function() {
@@ -72,3 +101,4 @@
     document.getElementById('rep_fecha_nacimiento').setAttribute('max', formattedMaxDateRep);
   });
 </script>
+-->

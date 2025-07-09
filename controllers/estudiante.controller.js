@@ -34,7 +34,15 @@ exports.detallesEstudiante = async (req, res) => {
         const studentId = req.params.id;
         const studentSection = await EstudianSeccion.obtenerUltimaInscripcionPorEstudiante(studentId);
         console.log('Ultima inscripción del estudiante:', studentSection);
-        const seccionData = await AnioSeccion.obtenerAnoSeccion(studentSection.cod_anoSecci);
+        let seccionData;
+        if (!studentSection || !studentSection.cod_anoSecci) {
+            console.log('El estudiante no está inscrito en ninguna sección');
+            seccionData = { codigo_secci: null, nombre_secci: 'No inscrito en ninguna sección' };
+        } else {
+            console.log('Código de sección del estudiante:', studentSection.cod_anoSecci);
+            seccionData = await AnioSeccion.obtenerAnoSeccion(studentSection.cod_anoSecci);
+        }
+        
         console.log('ID del estudiante:', studentId);
         console.log('Sección del estudiante:', seccionData);
         let cursante;
@@ -122,6 +130,7 @@ exports.detallesMadre = async (req, res) => {
         }
 
         const motherData = await Person.obtenerPersona(mother.codigo_perso);
+        console.log('Datos de la madre:', motherData);
         const cleanMother = motherData;
         
         const formattedMot = {

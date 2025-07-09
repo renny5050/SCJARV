@@ -18,7 +18,13 @@ const obtenerInscripcionCompleta = async (cedulaEscolar) => {
         const estudiante = await Estudiante.obtenerEstudianteCedula(cedulaEscolar);
         if (!estudiante) return null;
 
-        const seccionData = await EstudianSeccion.obtenerUltimaInscripcionPorEstudiante(estudiante.codigo_estud)
+        let seccionData = await EstudianSeccion.obtenerUltimaInscripcionPorEstudiante(estudiante.codigo_estud);
+
+        if (!seccionData || seccionData.nombre_secci === null || seccionData.nombre_secci === undefined || seccionData.nombre_secci === "") {
+            seccionData = seccionData || {};
+            seccionData.nombre_secci = "No asignada";
+        }
+
 
         console.log('Datos seccion:', seccionData);
 
@@ -114,7 +120,7 @@ const obtenerInscripcionCompleta = async (cedulaEscolar) => {
             emer_nacionalidad: personaEmergencia.nacionalidad,
 
             // ... resto de campos de emergencia
-            nombre_secci: seccionData.nombre_secci ? seccionData.nombre_secci : "No asignada",
+            nombre_secci: seccionData.nombre_secci,
             // Datos complementarios
             ...ambienteSocio,
             ...antecedentesPren,
@@ -227,7 +233,7 @@ doc.moveDown(0.5);
 doc.font('Helvetica')
    .fontSize(13)
    .fillColor('#333')
-   .text(`Código: ${studentData.cedu_escolar} | Fecha: ${studentData.fecha_inscripcion}`, { align: 'center' })
+   .text(`Cédula Escolar: ${studentData.cedu_escolar} | Fecha: ${studentData.fecha_inscripcion}`, { align: 'center' })
    .moveDown(1.5);
 
         // Datos del estudiante
@@ -250,7 +256,12 @@ doc.font('Helvetica')
         const rh = studentData.tip_sangrees ? '+' : '-';
         doc.text(`Tipo de sangre: ${studentData.grupo_sangui}${rh} | Peso: ${studentData.peso_kg} kg | Talla: ${studentData.tall_cm} m`);
         
+        /* original
         doc.text(`Procedencia: ${studentData.nombre_secci || ''} | Institución anterior: ${studentData.institucion || ''}`);
+        doc.moveDown(1);
+        */
+
+        doc.text(`Procedencia: ${studentData.nombre_secci || ''}`);
         doc.moveDown(1);
 
         // Datos del representante
@@ -566,6 +577,8 @@ function mapearEstudiante(body, relaciones) {
 exports.subirInscripcion = async (req, res) => {
   try {
     const data = req.body;
+
+    console.log('Datos recibidos para inscripción:', data);
 
     // 1. Verificar y crear/manejar padre
     let codigo_perso_padre;
