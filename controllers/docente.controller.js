@@ -22,12 +22,13 @@ exports.listarDocentes = async (req, res) => {
 // Crear un nuevo docente
 exports.crearDocente = async (req, res) => {
     try {
+        console.log('Datos recibidos para crear docente:', req.body);
         const persona = {
             primer_nombr: req.body.primer_nombr,
             segundo_nomb: req.body.segundo_nomb,
             primer_apell: req.body.primer_apell,
             segund_apell: req.body.segund_apell,
-            cedula_perso: req.body.cedula_perso,
+            
             cedula: req.body.cedula,
             fech_nacimie: req.body.fech_nacimie,
             nacionalidad: req.body.nacionalidad,
@@ -43,16 +44,18 @@ exports.crearDocente = async (req, res) => {
         };
 
         // Validación de campos obligatorios
-        if (!persona.primer_nombr || !persona.primer_apell || !persona.cedula_perso) {
+        if (!persona.primer_nombr || !persona.primer_apell || !persona.cedula) {
             const error = new Error('Nombre, apellido y cédula son campos obligatorios');
             error.status = 400;
             throw error;
         }
 
         await nuPersonaModel.crearPersona(persona);
+        console.log('Docente creado exitosamente:', persona);
         res.redirect('/docentes');
     } catch (error) {
         try {
+            console.error('Error al crear docente:', error);
             // Recargar la lista de docentes con los datos ingresados
             const docentesData = await nuPersonaModel.obtenerTodasPersonas();
             const docentes = docentesData.filter(docente => docente.docente === 1);
@@ -78,7 +81,7 @@ exports.actualizarDocente = async (req, res) => {
             segundo_nomb: req.body.segundo_nomb,
             primer_apell: req.body.primer_apell,
             segund_apell: req.body.segund_apell,
-            cedula_perso: req.body.cedula_perso,
+            
             cedula: req.body.cedula,
             fech_nacimie: req.body.fech_nacimie,
             nacionalidad: req.body.nacionalidad,
@@ -93,7 +96,7 @@ exports.actualizarDocente = async (req, res) => {
         };
 
         // Validación de campos obligatorios
-        if (!persona.primer_nombr || !persona.primer_apell || !persona.cedula_perso) {
+        if (!persona.primer_nombr || !persona.primer_apell || !persona.cedula) {
             const error = new Error('Nombre, apellido y cédula son campos obligatorios');
             error.status = 400;
             throw error;

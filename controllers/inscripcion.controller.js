@@ -430,8 +430,7 @@ function mapearRepresentanteAPersona(body) {
         segundo_nomb: body.rep_segundo_nomb || '',
         primer_apell: body.rep_primer_apell || '',
         segund_apell: body.rep_segund_apell || '',
-        cedula_perso: body.rep_cedula || '',
-        cedula: body.rep_cedula || '',  // Mismo valor que cedula_perso
+        cedula: body.rep_cedula || '',  
         fech_nacimie: body.rep_fecha_nacimiento || '',
         nacionalidad: '',  // Valor por defecto (no viene en el JSON)
         correo_perso: body.rep_email || '',
@@ -449,7 +448,7 @@ function mapearPadreAPersona(body) {
         segundo_nomb: body.padre_segundo_nomb || '',
         primer_apell: body.padre_primer_apell || '',
         segund_apell: body.padre_segundo_apell || '',
-        cedula_perso: body.padre_cedula || '',
+        
         cedula: body.padre_cedula || '',
         fech_nacimie: body.padre_fecha_nacimiento || '',
         nacionalidad: body.padre_nacionalidad || '',
@@ -470,7 +469,7 @@ function mapearMadreAPersona(body) {
         segundo_nomb: body.madre_segundo_nomb || '',
         primer_apell: body.madre_primer_apell || '',
         segund_apell: body.madre_segundo_apell || '',
-        cedula_perso: body.madre_cedula || '',
+        
         cedula: body.madre_cedula || '',
         fech_nacimie: body.madre_fecha_nacimiento || '',
         nacionalidad: body.madre_nacionalidad || '',
@@ -499,7 +498,7 @@ function mapearEmergenciaAPersona(body) {
         segundo_nomb: body.emer_segundo_nombre || '',
         primer_apell: body.emer_primer_apellido || '',
         segund_apell: body.emer_segundo_apellido || '',
-        cedula_perso: body.emer_cedula || '',
+        
         cedula: body.emer_cedula || '',
         fech_nacimie: '',  // No disponible en el formulario
         nacionalidad: body.emer_nacionalidad || '',

@@ -223,7 +223,7 @@
             <!-- Cédula y Nacionalidad -->
             <div class="col-md-6">
                 <label class="form-label">Cédula Personal *</label>
-                <input type="text" class="form-control" name="cedula_perso" required>
+                <input type="text" class="form-control" name="cedula" required>
                 <small class="text-muted">Ej: 12345678 (Cédula de identidad)</small>
             </div>
             <div class="col-md-6">
@@ -319,7 +319,7 @@
                                             </span>
                                         </td>
                                         <td><%= `${docente.primer_nombr} ${docente.segundo_nomb || ''} ${docente.primer_apell} ${docente.segund_apell || ''}`.trim() %></td>
-                                        <td><%= docente.cedula_perso %></td>
+                                        <td><%= docente.cedula %></td>
                                         <td><%= docente.correo_perso %></td>
                                         
                                         <td class="text-center">

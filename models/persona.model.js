@@ -26,11 +26,11 @@ exports.crearPersona = async (persona) => {
     const sql = `
         INSERT INTO Tb_nupersona (
             primer_nombr, segundo_nomb, primer_apell, segund_apell,
-            cedula_perso, cedula, fech_nacimie, nacionalidad,
+             cedula, fech_nacimie, nacionalidad,
             correo_perso, direcc_perso, status_perso,
             prin_telefono, sec_telefono, cas_telefono,
             estado_civil, ocupacion_p, docente
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     const params = [
@@ -38,7 +38,7 @@ exports.crearPersona = async (persona) => {
         persona.segundo_nomb,
         persona.primer_apell,
         persona.segund_apell,
-        persona.cedula_perso,
+        
         persona.cedula,
         persona.fech_nacimie,
         persona.nacionalidad,
@@ -72,10 +72,10 @@ exports.obtenerPersona = async (codigo_perso) => {
 };
 
 // Nueva función para buscar persona por cédula
-exports.obtenerPersonaPorCedula = async (cedula_perso) => {
+exports.obtenerPersonaPorCedula = async (cedula) => {
     const row = await db.getAsync(
-        "SELECT * FROM Tb_nupersona WHERE cedula_perso = ?", 
-        [cedula_perso]
+        "SELECT * FROM Tb_nupersona WHERE cedula = ?", 
+        [cedula]
     );
     
     if (row) {
@@ -93,7 +93,7 @@ exports.actualizarPersona = async (codigo_perso, persona) => {
             segundo_nomb = ?,
             primer_apell = ?,
             segund_apell = ?,
-            cedula_perso = ?,
+            
             cedula = ?,
             fech_nacimie = ?,
             nacionalidad = ?,
@@ -111,7 +111,7 @@ exports.actualizarPersona = async (codigo_perso, persona) => {
         persona.segundo_nomb,
         persona.primer_apell,
         persona.segund_apell,
-        persona.cedula_perso,
+        
         persona.cedula,
         persona.fech_nacimie,
         persona.nacionalidad,

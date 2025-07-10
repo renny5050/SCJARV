@@ -14,7 +14,6 @@ const statements = [
   "segundo_nomb" VARCHAR(20),
   "primer_apell" VARCHAR(20) NOT NULL,
   "segund_apell" VARCHAR(20),
-  "cedula_perso" VARCHAR(10) NOT NULL UNIQUE,
   "cedula" VARCHAR(10) NOT NULL UNIQUE,
   "fech_nacimie" DATE,
   "nacionalidad" VARCHAR(1),
@@ -205,7 +204,7 @@ const statements = [
 );`,
 
 // Índices para mejorar el rendimiento
-`CREATE INDEX IF NOT EXISTS idx_persona_cedula ON Tb_nupersona(cedula_perso);`,
+`CREATE INDEX IF NOT EXISTS idx_persona_cedula ON Tb_nupersona(cedula);`,
 `CREATE INDEX IF NOT EXISTS idx_estudiante_cedu_escolar ON Tb_estudiant(cedu_escolar);`,
 `CREATE INDEX IF NOT EXISTS idx_anoSeccion_ano ON Tb_anoSeccio(ano_Seccione);`,
 `CREATE INDEX IF NOT EXISTS idx_inscripcion_estudiante ON Tb_inscripci(codigo_estud);`,
