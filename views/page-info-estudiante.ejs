@@ -71,62 +71,84 @@
         </div>
         
         <div class="detail-card">
-            <h3 class="detail-title">
-                <i class="fas fa-id-card me-2"></i>
-                Información Personal
-            </h3>
-            
-            
-            <div class="detail-row">
-                <div class="detail-label">Nombre completo:</div>
-                <div class="detail-value">
-                    <%= student.primer_nombr %> 
-                    <%= student.segundo_nomb || '' %> 
-                    <%= student.primer_apell %> 
-                    <%= student.segundo_apellido || '' %>
-                </div>
-            </div>
-            
-            <div class="detail-row">
-                <div class="detail-label">Cédula escolar:</div>
-                <div class="detail-value"><%= student.nacionalidad %> - <%= student.cedu_escolar %></div>
-            </div>
-            
-            <div class="detail-row">
-                <div class="detail-label">Fecha de nacimiento:</div>
-                <div class="detail-value"><%= student.fecha_nacimiento_formatted %></div>
-            </div>
-            
-            <div class="detail-row">
-                <div class="detail-label">Sexo:</div>
-                <div class="detail-value"><%= student.sexo_text %></div>
-            </div>
-            
-<!-- Agregar alergias -->
-            
-            <div class="detail-row">
-                <div class="detail-label">Tipo de sangre:</div>
-                <div class="detail-value"><%= student.grupo_sangui %><%= student.tip_sangrees %></div>
-            </div>
-            
-            <div class="detail-row">
-                <div class="detail-label">Lugar de nacimiento:</div>
-                <div class="detail-value">
-                    <%= student.estad_nacimi %>, <%= student.munic_nacimi %>
-                </div>
-            </div>
+    <h3 class="detail-title">
+        <i class="fas fa-id-card me-2"></i>
+        Información Personal
+    </h3>
 
-            <div class="detail-row">
-                <div class="detail-label">Cursando:</div>
-                <div class="detail-value"><%= cursante %></div>
-            </div>
-            
-            
-            
-            <div class="text-center mt-4">
-    <a href="/estudiantes" class="btn back-btn" style="background-color: #dc3545; border-color: #dc3545; color: #ffffff;">
-        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-    </a>
+    <!-- Datos existentes -->
+    <div class="detail-row">
+        <div class="detail-label">Nombre completo:</div>
+        <div class="detail-value">
+            <%= student.primer_nombr %> 
+            <%= student.segundo_nomb || '' %> 
+            <%= student.primer_apell %> 
+            <%= student.segundo_apellido || '' %>
+        </div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Cédula escolar:</div>
+        <div class="detail-value"><%= student.nacionalidad %> - <%= student.cedu_escolar %></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Fecha de nacimiento:</div>
+        <div class="detail-value"><%= student.fecha_nacimiento_formatted %></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Sexo:</div>
+        <div class="detail-value"><%= student.sexo_text %></div>
+    </div>
+
+    <!-- Alergias (si existen) -->
+    <% if (student.alergias && student.alergias.trim()) { %>
+        <div class="detail-row">
+            <div class="detail-label">Alergias:</div>
+            <div class="detail-value"><%= student.alergias %></div>
+        </div>
+    <% } %>
+
+    <div class="detail-row">
+        <div class="detail-label">Tipo de sangre:</div>
+        <div class="detail-value"><%= student.grupo_sangui %><%= student.tip_sangrees %></div>
+    </div>
+
+    <div class="detail-row">
+        <div class="detail-label">Lugar de nacimiento:</div>
+        <div class="detail-value">
+            <%= student.estad_nacimi %>, <%= student.munic_nacimi %>
+        </div>
+    </div>
+
+    <!-- Nuevos campos: Peso y talla -->
+    <% if (student.peso_kg) { %>
+        <div class="detail-row">
+            <div class="detail-label">Peso:</div>
+            <div class="detail-value"><%= student.peso_kg %> kg</div>
+        </div>
+    <% } %>
+
+    <% if (student.tall_cm) { %>
+        <div class="detail-row">
+            <div class="detail-label">Talla del niño:</div>
+            <div class="detail-value"><%= student.tall_cm %> cm</div>
+        </div>
+    <% } %>
+
+    <!-- Cursando -->
+    <div class="detail-row">
+        <div class="detail-label">Cursando:</div>
+        <div class="detail-value"><%= cursante %></div>
+    </div>
+
+    <!-- Botón de regreso -->
+    <div class="text-center mt-4">
+        <a href="/estudiantes" class="btn back-btn" style="background-color: #dc3545; border-color: #dc3545; color: #ffffff;">
+            <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+        </a>
+    </div>
 </div>
         </div>
 

@@ -76,7 +76,7 @@ app.get('/seccion/:id/:cedulaEscolar', anioSeccion.listarAnoSeccion);
 
 app.get('/cursantes/:id', estudianteSeccion.mostrarInscripciones);
 
-// app.post('/cursantes/agregar/', estudianteSeccion.inscribirEstudianteRedireccion);
+app.get('/inscripciones/pdf/:id', estudianteSeccion.generarPDFInscripciones);
 
 app.post('/cursantes/:id/agregar', estudianteSeccion.inscribirEstudiante);
 
@@ -89,6 +89,8 @@ app.post('/docentes', docente.crearDocente);
 app.post('/docentes/:id/borrar', docente.eliminarDocente);
 
 app.get('/representantes', representante.cargarRepresentantes);
+
+app.get('/representantes/pdf', representante.generarPDFRepresentantes);
 
 app.post('/representantes/buscar', representante.buscarRepresentantePorCedula);
 

@@ -52,7 +52,7 @@ const statements = [
   "enfe_madreEm" VARCHAR(35),
   "cod_codiPart" VARCHAR(50) NOT NULL,
   "edad_maParto" INTEGER NOT NULL,
-  "peso_ninoNac" INTEGER NOT NULL,
+  "peso_ninoNac" FLOAT NOT NULL,
   "tall_ninoNac" INTEGER NOT NULL,
   "medi_contPre" VARCHAR(30)
 );`,

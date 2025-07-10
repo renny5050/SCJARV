@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
         email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
         pesoActual: (value) => !value || (value >= 10 && value <= 30),
         tallaActual: (value) => !value || (value >= 50 && value <= 130),
-        pesoNacimiento: (value) => !value || (value >= 500 && value <= 6000),
+        pesoNacimiento: (value) => !value || (value >= 0.5 && value <= 6),
         tallaNacimiento: (value) => !value || (value >= 30 && value <= 60),
         edadMadreParto: (value) => !value || (value >= 10 && value <= 60),
         edadHablar: (value) => !value || (value >= 0 && value <= 60),
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // ===== ANTECEDENTES PRENATALES =====
         'edad_madre_parto': { validator: validators.edadMadreParto, msg: 'Entre 10-60 años' },
-        'peso_nino': { validator: validators.pesoNacimiento, msg: 'Entre 500-6000 g' },
+        'peso_nino': { validator: validators.pesoNacimiento, msg: 'Entre 0.5 y 6 Kg' },
         'talla_nino': { validator: validators.tallaNacimiento, msg: 'Entre 30-60 cm' },
         'edad_hablar': { validator: validators.edadHablar, msg: '0-60 meses' },
         'edad_caminar': { validator: validators.edadCaminar, msg: '0-24 meses' }
